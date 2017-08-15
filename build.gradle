@@ -1,0 +1,46 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.6.RELEASE'
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    runtime('org.springframework.boot:spring-boot-devtools')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile(
+            'junit:junit:4.12',
+            'org.mockito:mockito-core:2.7.19',
+            'io.github.bonigarcia:webdrivermanager:1.7.1',
+            'org.seleniumhq.selenium:selenium-java:3.3.1',
+            'info.cukes:cucumber-java:1.2.5',
+            'info.cukes:cucumber-junit:1.2.5'
+    )
+}
