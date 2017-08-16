@@ -35,6 +35,7 @@ cucumber {
             'json:build/cucumber.json',
             'junit:build/cucumber.xml' // junit format for integration with CI tool etc
     ]
+    tags = ['~@developing']
 }
 
 check.dependsOn tasks.test, tasks.cucumber
