@@ -56,6 +56,7 @@ public class MailServiceImplTest {
     @Test(expected = Exception.class)
     public void sendWithBodyFieldNull() throws Exception {
         service.send(new MailInfo("gadget.mailsender@gmail.com", "gadget.mailsender@gmail.com", "subject", null));
+
     }
 
 }

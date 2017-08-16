@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MailServiceImpl implements MailService {
-
     private static final String MAIL_HOST = "smtp.gmail.com";
     private static final String SSL_SMTP_PORT = "465";
     private static final String CHARSET = "ISO-2022-JP";
@@ -48,6 +47,7 @@ public class MailServiceImpl implements MailService {
         mailClient.setSSL(true);
         mailClient.setCharset(CHARSET);
         mailClient.setAuthentication(SENDER_NAME, PASSWORD);
+
     }
 
 }
