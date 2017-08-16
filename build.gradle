@@ -48,6 +48,7 @@ dependencies {
     runtime('org.springframework.boot:spring-boot-devtools')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile(
+            'org.subethamail:subethasmtp:3.1.7',
             'junit:junit:4.12',
             'org.mockito:mockito-core:2.7.19',
             'io.github.bonigarcia:webdrivermanager:1.7.1',
