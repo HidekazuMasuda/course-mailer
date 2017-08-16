@@ -32,6 +32,7 @@ cucumber {
     formats = [
             'pretty', // prints nice format out to the console
             'html:build/reports/cucumber', // html
+            'json:build/cucumber.json',
             'junit:build/cucumber.xml' // junit format for integration with CI tool etc
     ]
 }
