@@ -9,147 +9,72 @@ public class ValidatorTest {
 
     @Test
     public void emptyMailAddress() throws Exception {
-        String mailAddress = "";
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress(""), is(false) );
     }
 
     @Test
     public void nullMailAddress() throws Exception {
-        String mailAddress = null;
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress(null), is(false));
     }
 
     @Test
     public void mailAddressWithoutAtSymbol() throws Exception {
-        String mailAddress = "stanly";
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress("stanly"), is(false));
     }
 
     @Test
     public void mailAddressStartsWithAtSymbol() throws Exception {
-        String mailAddress = "@stanly";
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress("@stanly"), is(false));
     }
 
     @Test
     public void mailAddressEndsWithAtSymbol() throws Exception {
-        String mailAddress = "stanly@";
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress("stanly@"), is(false));
     }
 
     @Test
     public void mailAddressOnlyAtSymbol() throws Exception {
-        String mailAddress = "@";
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress("@"), is(false));
     }
 
     @Test
     public void mailAddressTwoAtSymbol() throws Exception {
-        String mailAddress = "@@";
-        boolean expected = false;
-
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress("@@"), is(false));
     }
 
     @Test
     public void normalMailAddress() throws Exception {
-        String mailAddress = "stanly@odd-e.com";
-        boolean expected = true;
 
-        boolean actual = Validator.isMailAddress(mailAddress);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isMailAddress("stanly@odd-e.com"), is(true));
     }
 
     @Test
     public void nullSubject() throws Exception {
-
-        String subject = null;
-        boolean expected = false;
-
-        boolean actual = Validator.isSubject(subject);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isSubject(null), is(false));
     }
 
     @Test
     public void emptySubject() throws Exception {
-
-        String subject = "";
-        boolean expected = false;
-
-        boolean actual = Validator.isSubject(subject);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isSubject(""), is(false));
     }
 
     @Test
     public void normalSubject() throws Exception {
-
-        String subject = "subject";
-        boolean expected = true;
-
-        boolean actual = Validator.isSubject(subject);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isSubject("subject"), is(true));
     }
 
     @Test
     public void nullBody() throws Exception {
-
-        String body = null;
-        boolean expected = false;
-
-        boolean actual = Validator.isBody(body);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isBody(null), is(false));
     }
 
     @Test
     public void emptyBody() throws Exception {
-
-        String body = "";
-        boolean expected = false;
-
-        boolean actual = Validator.isBody(body);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isBody(""), is(false));
     }
 
     @Test
     public void normalBody() throws Exception {
-
-        String body = "body";
-        boolean expected = true;
-
-        boolean actual = Validator.isBody(body);
-
-        assertThat(expected, is(actual));
+        assertThat(Validator.isBody("body"), is(true));
     }
 }
