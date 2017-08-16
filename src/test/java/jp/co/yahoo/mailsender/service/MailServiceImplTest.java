@@ -1,14 +1,36 @@
 package jp.co.yahoo.mailsender.service;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.subethamail.wiser.Wiser;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class MailServiceImplTest {
 
-    private MailService service = new MailServiceImpl();
+    @Autowired
+    private MailService service;
+
+    private Wiser wiser;
+
+    @Before
+    public void before() {
+        wiser = new Wiser();
+        wiser.setPort(2500);
+        wiser.setHostname("localhost");
+        wiser.start();
+    }
+
+    @After
+    public void after() {
+        wiser.stop();
+    }
 
     @Test
     public void mailSendSuccess() throws Exception {

@@ -2,12 +2,20 @@ package jp.co.yahoo.mailsender.service;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MailServiceImpl implements MailService {
-    private static final String MAIL_HOST = "smtp.gmail.com";
-    private static final String SSL_SMTP_PORT = "465";
+
+    @Value("${smtp.host}")
+    private String mailHost;
+    @Value("${smtp.port}")
+    private Integer smtpPort;
+    @Value("${smtp.ssl.port}")
+    private String sslSmtpPort;
+    @Value("${smtp.ssl.enable}")
+    private Boolean sslEnable;
     private static final String CHARSET = "ISO-2022-JP";
     private static final String SENDER_NAME = "gadget.mailsender";
     private static final String PASSWORD = "mailsender";
@@ -42,9 +50,17 @@ public class MailServiceImpl implements MailService {
     }
 
     private void initMailClient(SimpleEmail mailClient) {
-        mailClient.setHostName(MAIL_HOST);
-        mailClient.setSslSmtpPort(SSL_SMTP_PORT);
-        mailClient.setSSL(true);
+
+
+        mailClient.setHostName(mailHost);
+
+        if (sslEnable) {
+            mailClient.setSslSmtpPort(sslSmtpPort);
+            mailClient.setSSL(true);
+        } else {
+            mailClient.setSmtpPort(smtpPort);
+        }
+
         mailClient.setCharset(CHARSET);
         mailClient.setAuthentication(SENDER_NAME, PASSWORD);
 
