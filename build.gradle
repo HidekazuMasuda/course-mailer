@@ -8,14 +8,15 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("com.github.samueltbrown:gradle-cucumber-plugin:0.9")
     }
 }
 
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
-
+apply plugin: 'com.github.samueltbrown.cucumber'
 
 
 version = '0.0.1-SNAPSHOT'
@@ -27,7 +28,15 @@ repositories {
     mavenCentral()
 }
 
+cucumber {
+    formats = [
+            'pretty', // prints nice format out to the console
+            'html:build/reports/cucumber', // html
+            'junit:build/cucumber.xml' // junit format for integration with CI tool etc
+    ]
+}
 
+check.dependsOn tasks.test, tasks.cucumber
 
 
 dependencies {
