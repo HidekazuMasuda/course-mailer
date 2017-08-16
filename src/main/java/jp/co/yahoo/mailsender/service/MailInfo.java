@@ -1,10 +1,10 @@
 package jp.co.yahoo.mailsender.service;
 
 public class MailInfo {
-    private final String from;
-    private final String to;
-    private final String subject;
-    private final String body;
+    private String from;
+    private String to;
+    private String subject;
+    private String body;
 
     public MailInfo(String from, String to, String subject, String body) {
         this.from = from;
@@ -28,4 +28,21 @@ public class MailInfo {
     public String getBody() {
         return body;
     }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
 }
