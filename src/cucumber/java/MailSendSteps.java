@@ -1,3 +1,4 @@
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -19,8 +20,11 @@ public class MailSendSteps {
             driver = new ChromeDriver();
             driver.get("http://localhost:8888/send");
         }
+    }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> driver.quit()));
+    @After
+    public void shutDownWebDriver() {
+        driver.quit();
     }
 
     @Given("^address is \"([^\"]*)\"$")
