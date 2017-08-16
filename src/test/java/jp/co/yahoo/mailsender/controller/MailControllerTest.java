@@ -12,9 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.junit.Assert.assertEquals;
@@ -37,10 +37,56 @@ public class MailControllerTest {
 
     @Test
     public void sendEmailSuccess() throws Exception {
-        mvc.perform(post("/sendEmail").param("subject", "is a subject"))
+        mvc.perform(post("/sendEmail")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "aki@gmail.com")
+                .param("subject", "is a subject")
+                .param("body", "is a body"))
                 .andExpect(view().name("send"));
 
         verify(mailService).send(argThat(mail -> mail.getSubject().equals("is a subject")));
+        verify(mailService).send(argThat(mail -> mail.getFrom().equals("gadget.mailsender@gmail.com")));
+        verify(mailService).send(argThat(mail -> mail.getTo().equals("aki@gmail.com")));
+        verify(mailService).send(argThat(mail -> mail.getBody().equals("is a body")));
+    }
+
+    @Test
+    public void showErrorIfEmptyMailAddress() throws Exception {
+        mvc.perform(post("/sendEmail")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "")
+                .param("subject", "is a subject")
+                .param("body", "is a body"))
+                .andExpect(model().attribute("error", "error"))
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).send(any());
+    }
+
+    @Test
+    public void showErrorIfEmptySubject() throws Exception {
+        mvc.perform(post("/sendEmail")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "aki@gmail.com")
+                .param("subject", "")
+                .param("body", "is a body"))
+                .andExpect(model().attribute("error", "error"))
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).send(any());
+    }
+
+    @Test
+    public void showErrorIfEmptyBody() throws Exception {
+        mvc.perform(post("/sendEmail")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "aki@gmail.com")
+                .param("subject", "is a subject")
+                .param("body", ""))
+                .andExpect(model().attribute("error", "error"))
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).send(any());
     }
 
 }

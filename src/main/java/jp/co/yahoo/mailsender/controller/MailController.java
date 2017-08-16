@@ -24,36 +24,28 @@ public class MailController {
 
     @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
     public String sendEmail(@ModelAttribute MailSendForm form, Model model) {
-        MailInfo mail = new MailInfo("", "", form.getSubject(), "");
+
+        if (!Validator.isMailAddress(form.getAddress())) {
+            model.addAttribute("error", "error");
+            return "send";
+        }
+
+        if (!Validator.isSubject(form.getSubject())) {
+            model.addAttribute("error", "error");
+            return "send";
+        }
+
+        if (!Validator.isBody(form.getBody())) {
+            model.addAttribute("error", "error");
+            return "send";
+        }
+
+        MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", form.getAddress(), form.getSubject(), form.getBody());
         try {
             mailService.send(mail);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "send";
-    }
-
-    @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public String post(@ModelAttribute MailSendForm form, Model model) {
-        // TODO Validate Request
-        String address = form.getAddress();
-        boolean isMailAddress = Validator.isMailAddress(address);
-        if (!isMailAddress) {
-            model.addAttribute("form", form);
-            model.addAttribute("error", "error");
-            return "send";
-        }
-
-        String subject = form.getSubject();
-        boolean isSubject = Validator.isSubject(subject);
-
-        String body = form.getBody();
-        boolean isBody = Validator.isBody(body);
-
-        // TODO Mail Send
-
-        // TODO Show the page
-        model.addAttribute("form", form);
         return "send";
     }
 
