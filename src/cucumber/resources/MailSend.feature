@@ -1,7 +1,6 @@
 Feature: Refund item
 
 # 1 field error
-@developing
 Scenario: address is empty
   Given address is ""
   And subject is "hello"
@@ -9,7 +8,7 @@ Scenario: address is empty
   When send
   Then error_area is "error"
 
-@developing
+
 Scenario: subject is empty
   Given address is "xxx@gmail.com"
   And subject is ""
@@ -17,7 +16,7 @@ Scenario: subject is empty
   When send
   Then error_area is "error"
 
-@developing
+
 Scenario: body is empty
   Given address is "xxx@gmail.com"
   And subject is "hello"
@@ -27,7 +26,6 @@ Scenario: body is empty
 
 
 # 2 field error
-@developing
 Scenario: address, subject is empty
   Given address is ""
   And subject is ""
@@ -35,7 +33,6 @@ Scenario: address, subject is empty
   When send
   Then error_area is "error"
 
-@developing
 Scenario: address, body is empty
   Given address is ""
   And subject is "hello"
@@ -43,7 +40,6 @@ Scenario: address, body is empty
   When send
   Then error_area is "error"
 
-@developing
 Scenario: subject, body is empty
   Given address is "xxx@gmail.com"
   And subject is ""
@@ -53,7 +49,6 @@ Scenario: subject, body is empty
 
 
 # 3 field error
-@developing
 Scenario: address, subject, body is empty
   Given address is ""
   And subject is ""
@@ -63,7 +58,6 @@ Scenario: address, subject, body is empty
 
 
 # address format error
-@developing
 Scenario: address format error: not include @
   Given address is "xxx"
   And subject is "hello"
@@ -71,7 +65,6 @@ Scenario: address format error: not include @
   When send
   Then error_area is "error"
 
-@developing
 Scenario: address format error: only @
   Given address is "@"
   And subject is "hello"
@@ -79,7 +72,6 @@ Scenario: address format error: only @
   When send
   Then error_area is "error"
 
-@developing
 Scenario: address format error: end with @
   Given address is "xxx@"
   And subject is "hello"
@@ -87,7 +79,6 @@ Scenario: address format error: end with @
   When send
   Then error_area is "error"
 
-@developing
 Scenario: address format error: start with @
   Given address is "@xxx"
   And subject is "hello"
