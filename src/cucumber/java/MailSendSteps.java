@@ -9,6 +9,7 @@ import jp.co.yahoo.mailsender.MailsenderApplication;
 import jp.co.yahoo.mailsender.service.MailInfo;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -23,9 +24,10 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
-@ContextConfiguration (classes = MailsenderApplication.class)
-@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = MailsenderApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MailSendSteps {
 
     @LocalServerPort
@@ -36,7 +38,7 @@ public class MailSendSteps {
 
     @Before
     public void setup() {
-        if(driver == null) {
+        if (driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
             driver.get("http://localhost:" + port + "/send");
@@ -80,16 +82,26 @@ public class MailSendSteps {
         Assert.assertEquals(errorArea, actual);
     }
 
+    @Then("^error_area is none$")
+    public void error_area_is_none() throws Throwable {
+        try {
+            driver.findElement(By.id("error-area"));
+            fail();
+        } catch (NoSuchElementException e) {
+            /* こちらが正常系*/
+            return;
+        }
+    }
+
     @Then("^should receive the following emails:$")
     public void should_receive_the_following_emails(List<MailInfo> mails) throws Throwable {
         List<WiserMessage> messages = wiser.getMessages();
         for (int i = 0; i < mails.size(); i++) {
-            MailInfo mail = mails.get(0);
             WiserMessage wiserMessage = messages.get(i);
-            assertThat(wiserMessage.getEnvelopeSender(), is(mail.getFrom()));
-            assertThat(wiserMessage.getEnvelopeReceiver(), is(mail.getTo()));
-            assertThat(wiserMessage.getMimeMessage().getSubject(), is(mail.getSubject()));
-            assertThat(wiserMessage.toString(), containsString(mail.getBody()));
+            assertThat(wiserMessage.getEnvelopeSender(), is(mails.get(i).getFrom()));
+            assertThat(wiserMessage.getEnvelopeReceiver(), is(mails.get(i).getTo()));
+            assertThat(wiserMessage.getMimeMessage().getSubject(), is(mails.get(i).getSubject()));
+            assertThat(wiserMessage.toString(), containsString(mails.get(i).getBody()));
         }
     }
 }
