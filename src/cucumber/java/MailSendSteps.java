@@ -12,6 +12,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.subethamail.wiser.Wiser;
+import org.subethamail.wiser.WiserMessage;
+
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @ContextConfiguration (classes = MailsenderApplication.class)
 @SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,19 +28,27 @@ public class MailSendSteps {
     private int port;
 
     private WebDriver driver;
+    private Wiser wiser;
+    private List<WiserMessage> messages;
 
     @Before
-    public void SetupWebDriver() {
+    public void setup() {
         if(driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
             driver.get("http://localhost:" + port + "/send");
         }
+        wiser = new Wiser();
+        wiser.setPort(2500);
+        wiser.setHostname("localhost");
+        wiser.start();
+
     }
 
     @After
-    public void shutDownWebDriver() {
+    public void shutDown() {
         driver.quit();
+        wiser.stop();
     }
 
     @Given("^address is \"([^\"]*)\"$")
@@ -60,5 +75,35 @@ public class MailSendSteps {
     public void error_area_is(String errorArea) throws Throwable {
         String actual = driver.findElement(By.id("error-area")).getText();
         Assert.assertEquals(errorArea, actual);
+    }
+
+    @Then("^receive mail count is \"([^\"]*)\"$")
+    public void receive_mail_count_is(String count) throws Throwable {
+        messages = wiser.getMessages();
+        assertThat(messages.size(), is(new Integer(count)));
+    }
+
+    @Then("^receive mail from is \"([^\"]*)\"$")
+    public void receive_mail_from_is(String from) throws Throwable {
+        WiserMessage wiserMessage = messages.get(0);
+        assertThat(wiserMessage.getEnvelopeSender(), is(from));
+    }
+
+    @Then("^receive mail to is \"([^\"]*)\"$")
+    public void receive_mail_to_is(String to) throws Throwable {
+        WiserMessage wiserMessage = messages.get(0);
+        assertThat(wiserMessage.getEnvelopeReceiver(), is(to));
+    }
+
+    @Then("^receive mail subject is \"([^\"]*)\"$")
+    public void receive_mail_subject_is(String subject) throws Throwable {
+        WiserMessage wiserMessage = messages.get(0);
+        assertThat(wiserMessage.getMimeMessage().getSubject(), is(subject));
+    }
+
+    @Then("^receive mail body is \"([^\"]*)\"$")
+    public void receive_mail_body_is(String body) throws Throwable {
+        WiserMessage wiserMessage = messages.get(0);
+        assertThat(new String(wiserMessage.getData()).contains(body), is(true));
     }
 }
