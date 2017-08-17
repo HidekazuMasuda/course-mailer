@@ -1,9 +1,7 @@
 package jp.co.yahoo.mailsender.data;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 
-import javax.naming.Name;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +9,30 @@ import java.util.List;
 public class AddressBook {
 
     private List<AddressItem> addressItems = new ArrayList<AddressItem>();
+    public static final String FILE_PATH = System.getenv("HOME") + "/gadget-mailsender/addressbook.json";
+
+    public void load() throws Exception {
+        if (!addressItems.isEmpty()) {
+            addressItems.clear();
+        }
+
+        List<String> addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
+        for ( String address : addressList ){
+            add(AddressItem.convertJsonToObject(address));
+        }
+    }
+
+    public void add(AddressItem addressItem) throws Exception {
+        for(AddressItem item : this.addressItems){
+            if(item.getMailAddress().equals(addressItem.getMailAddress())){
+                throw new Exception("Duplicate mail address");
+            }
+        }
+        this.addressItems.add(addressItem);
+    }
 
     public boolean save() throws IOException {
-        String filePath = System.getenv("HOME") + "/gadget-mailsender/addressbook.json";
-        File file = new File(filePath);
+        File file = new File(FILE_PATH);
 
         File directory = new File(file.getParent());
         directory.mkdirs();
@@ -23,13 +41,11 @@ public class AddressBook {
             return false;
         }
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+        try (
+
+             BufferedWriter bufferedWriter = getBufferedWriter(file)) {
             for (AddressItem addressItem : addressItems) {
-                ObjectMapper mapper = new ObjectMapper();
-                String addressItemAsString = mapper.writeValueAsString(addressItem);
-                bufferedWriter.write(addressItemAsString);
+                bufferedWriter.write(addressItem.addressItemToString());
                 bufferedWriter.newLine();
             }
         }
@@ -37,22 +53,10 @@ public class AddressBook {
         return true;
     }
 
-    public void add(AddressItem addressItem) {
-        this.addressItems.add(addressItem);
+    private BufferedWriter getBufferedWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
     }
 
-    public void load() throws IOException {
-        String filePath = System.getenv("HOME") + "/gadget-mailsender/addressbook.json";
-        File file = new File(filePath);
-        List<String> addressList = FileUtils.readLines(file, "utf-8");
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        for ( String address : addressList ){
-            AddressItem addressItem = mapper.readValue(address, AddressItem.class);
-            add(addressItem);
-        }
-    }
 
     public List<AddressItem> getAddressItems() {
         return addressItems;
