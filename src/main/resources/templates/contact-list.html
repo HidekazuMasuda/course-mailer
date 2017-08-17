@@ -41,7 +41,7 @@
             <br/>
             <label>Address List</label>
             <br/>
-            <dl>
+            <dl id="address-list">
                 <dt th:each="mail : ${contactList}">
                     <a href="#" th:text="${mail.mailAddress}"></a>
                 </dt>
