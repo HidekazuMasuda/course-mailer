@@ -20,6 +20,7 @@ import org.subethamail.wiser.WiserMessage;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -32,7 +33,6 @@ public class MailSendSteps {
 
     private WebDriver driver;
     private Wiser wiser;
-    private List<WiserMessage> messages;
 
     @Before
     public void setup() {
@@ -81,44 +81,15 @@ public class MailSendSteps {
     }
 
     @Then("^should receive the following emails:$")
-    public void should_receive_the_following_emails(List<MailInfo> table) throws Throwable {
-
-        assertThat(table.size(), is(wiser.getMessages().size()));
-
-        // Write code here that turns the phrase above into concrete actions
-        // For automatic transformation, change DataTable to one of
-        // List<YourType>, List<List<E>>, List<Map<K,V>> or Map<K,V>.
-        // E,K,V must be a scalar (String, Integer, Date, enum etc)
-
-    }
-
-    @Then("^receive mail count is (\\d+)$")
-    public void receive_mail_count_is(String count) throws Throwable {
-        messages = wiser.getMessages();
-        assertThat(messages.size(), is(new Integer(count)));
-    }
-
-    @Then("^receive mail from is \"([^\"]*)\"$")
-    public void receive_mail_from_is(String from) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getEnvelopeSender(), is(from));
-    }
-
-    @Then("^receive mail to is \"([^\"]*)\"$")
-    public void receive_mail_to_is(String to) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getEnvelopeReceiver(), is(to));
-    }
-
-    @Then("^receive mail subject is \"([^\"]*)\"$")
-    public void receive_mail_subject_is(String subject) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getMimeMessage().getSubject(), is(subject));
-    }
-
-    @Then("^receive mail body is \"([^\"]*)\"$")
-    public void receive_mail_body_is(String body) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(new String(wiserMessage.getData()).contains(body), is(true));
+    public void should_receive_the_following_emails(List<MailInfo> mails) throws Throwable {
+        List<WiserMessage> messages = wiser.getMessages();
+        for (int i = 0; i < mails.size(); i++) {
+            MailInfo mail = mails.get(0);
+            WiserMessage wiserMessage = messages.get(i);
+            assertThat(wiserMessage.getEnvelopeSender(), is(mail.getFrom()));
+            assertThat(wiserMessage.getEnvelopeReceiver(), is(mail.getTo()));
+            assertThat(wiserMessage.getMimeMessage().getSubject(), is(mail.getSubject()));
+            assertThat(wiserMessage.toString(), containsString(mail.getBody()));
+        }
     }
 }

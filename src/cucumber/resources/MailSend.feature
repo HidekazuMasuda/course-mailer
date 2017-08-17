@@ -106,3 +106,15 @@ Scenario: send mail success one
   And should receive the following emails:
     | from                        | to            | subject       | body      |
     | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
+
+@developing
+Scenario: send mail success two
+  Given address is "xxx@gmail.com;yyy@gmail.com"
+  And subject is "hello"
+  And body is "message"
+  When send
+  Then error_area is ""
+  And should receive the following emails:
+    | from                        | to            | subject       | body      |
+    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
+    | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |
