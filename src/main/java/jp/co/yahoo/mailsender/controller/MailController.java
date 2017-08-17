@@ -20,7 +20,7 @@ public class MailController {
     private MailService mailService;
 
     @GetMapping("/send")
-    public String send(Model model){
+    public String send(Model model) {
         return "send";
     }
 
@@ -43,18 +43,21 @@ public class MailController {
             return "send";
         }
 
-        String[] addresses = addressFromForm.split(";");
-        for(String address : addresses) {
+        String[] addresses = addressFromForm.split("\\s*;\\s*");
+        for (String address : addresses) {
             if (!Validator.isMailAddress(address)) {
                 model.addAttribute("errorMessage", "error");
                 return "send";
             }
+        }
 
+        for (String address : addresses) {
             MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, form.getSubject(), form.getBody());
             try {
                 mailService.send(mail);
             } catch (Exception e) {
                 model.addAttribute("errorMessage", "error");
+                return "send";
             }
         }
 
