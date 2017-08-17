@@ -7,7 +7,7 @@ import java.util.List;
 public interface AddressBookService {
 
 
-    void add(AddressItem addressItem);
+    void add(AddressItem addressItem) throws Exception;
 
     List<AddressItem> get();
 }

@@ -13,7 +13,7 @@ public class AddressBookServiceImpl implements AddressBookService {
     private AddressBook addressBook = new AddressBook();
 
     @Override
-    public void add(AddressItem addressItem) {
+    public void add(AddressItem addressItem) throws Exception {
         addressBook.add(addressItem);
     }
 

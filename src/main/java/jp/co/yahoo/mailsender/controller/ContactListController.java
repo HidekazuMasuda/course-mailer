@@ -33,7 +33,12 @@ public class ContactListController {
     public String addContactList(@ModelAttribute ContactListForm form, Model model) {
 
         AddressItem input = new AddressItem(form.getAddress());
-        addressBookService.add(input);
+        try {
+            addressBookService.add(input);
+
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "error");
+        }
         List<AddressItem> addressList = addressBookService.get();
         model.addAttribute("contactList", addressList);
         return "contact-list";
