@@ -8,10 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
+import java.util.stream.Stream;
 
 @Controller
 public class MailController {
@@ -25,30 +29,21 @@ public class MailController {
     }
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public String sendEmail(@ModelAttribute MailSendForm form, Model model) {
+    public String sendEmail(@Valid @ModelAttribute MailSendForm form, BindingResult result, Model model) {
 
-        if (!Validator.isSubject(form.getSubject())) {
+        if (result.hasErrors()) {
             model.addAttribute("errorMessage", "error");
             return "send";
         }
 
-        if (!Validator.isBody(form.getBody())) {
+        String[] addresses = form.getAddress().split("\\s*;\\s*");
+
+        boolean isValid = Stream.of(addresses)
+                .anyMatch(address -> !Validator.isMailAddress(address));
+
+        if (isValid) {
             model.addAttribute("errorMessage", "error");
             return "send";
-        }
-
-        String addressFromForm = form.getAddress();
-        if (StringUtils.isEmpty(addressFromForm)) {
-            model.addAttribute("errorMessage", "error");
-            return "send";
-        }
-
-        String[] addresses = addressFromForm.split("\\s*;\\s*");
-        for (String address : addresses) {
-            if (!Validator.isMailAddress(address)) {
-                model.addAttribute("errorMessage", "error");
-                return "send";
-            }
         }
 
         for (String address : addresses) {
