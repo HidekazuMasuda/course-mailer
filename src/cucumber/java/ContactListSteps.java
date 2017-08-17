@@ -66,18 +66,18 @@ public class ContactListSteps {
         addressBook.save();
     }
 
-    @When("^add")
+    @When("^add$")
     public void add() throws Throwable {
         driver.findElement(By.id("add")).click();
     }
 
-    @Then("^contactlist error_area is \"([^\"]*)\"$")
+    @Then("^ContactList error_area is \"([^\"]*)\"$")
     public void error_area_is(String errorArea) throws Throwable {
         String actual = driver.findElement(By.id("error-area")).getText();
         Assert.assertEquals(errorArea, actual);
     }
 
-    @Then("^address is added \"([^\"]*)\"$")
+    @Then("^ContactList address is added \"([^\"]*)\"$")
     public void contact_list_has(String address) throws Throwable {
         String list = driver.findElement(By.id("address-list")).getText();
         int index = list.indexOf(address);
