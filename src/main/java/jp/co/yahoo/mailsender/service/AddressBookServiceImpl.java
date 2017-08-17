@@ -10,14 +10,15 @@ import java.util.List;
 public class AddressBookServiceImpl implements AddressBookService {
 
 
+    private AddressBook addressBook = new AddressBook();
 
     @Override
     public void add(AddressItem addressItem) {
-
+        addressBook.add(addressItem);
     }
 
     @Override
     public List<AddressItem> get() {
-        return null;
+        return addressBook.getAddressItems();
     }
 }
