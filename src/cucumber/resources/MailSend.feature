@@ -97,6 +97,7 @@ Scenario: address format error: start with @
 
 
 # success case
+@developing
 Scenario: send mail success one
   Given address is "xxx@gmail.com"
   And subject is "hello"
