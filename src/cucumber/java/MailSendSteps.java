@@ -1,3 +1,4 @@
+import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -5,6 +6,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import jp.co.yahoo.mailsender.MailsenderApplication;
+import jp.co.yahoo.mailsender.service.MailInfo;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +18,7 @@ import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -75,6 +78,18 @@ public class MailSendSteps {
     public void error_area_is(String errorArea) throws Throwable {
         String actual = driver.findElement(By.id("error-area")).getText();
         Assert.assertEquals(errorArea, actual);
+    }
+
+    @Then("^should receive the following emails:$")
+    public void should_receive_the_following_emails(List<MailInfo> table) throws Throwable {
+
+        assertThat(table.size(), is(wiser.getMessages().size()));
+
+        // Write code here that turns the phrase above into concrete actions
+        // For automatic transformation, change DataTable to one of
+        // List<YourType>, List<List<E>>, List<Map<K,V>> or Map<K,V>.
+        // E,K,V must be a scalar (String, Integer, Date, enum etc)
+
     }
 
     @Then("^receive mail count is (\\d+)$")
