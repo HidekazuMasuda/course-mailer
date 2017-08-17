@@ -41,19 +41,17 @@ public class AddressBook {
             return false;
         }
 
-        try (
-
-             BufferedWriter bufferedWriter = getBufferedWriter(file)) {
+        try (BufferedWriter writer = getWriter(file)) {
             for (AddressItem addressItem : addressItems) {
-                bufferedWriter.write(addressItem.addressItemToString());
-                bufferedWriter.newLine();
+                writer.write(addressItem.addressItemToString());
+                writer.newLine();
             }
         }
 
         return true;
     }
 
-    private BufferedWriter getBufferedWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
+    private BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
     }
 

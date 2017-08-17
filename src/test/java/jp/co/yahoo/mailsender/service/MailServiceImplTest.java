@@ -9,6 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.subethamail.wiser.Wiser;
+import org.subethamail.wiser.WiserMessage;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,6 +41,15 @@ public class MailServiceImplTest {
     @Test
     public void mailSendSuccess() throws Exception {
         service.send(new MailBuilder().aValidMail().build());
+
+        // wiserが受信したデータをログ出力
+        List<WiserMessage> messages = wiser.getMessages();
+
+        assertThat(messages.size(), is(1));
+
+        WiserMessage wiserMessage = messages.get(0);
+        assertThat(wiserMessage.getEnvelopeReceiver(), is("gadget.mailsender@gmail.com"));
+        assertThat(wiserMessage.getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
     }
 
     @Test(expected = Exception.class)
