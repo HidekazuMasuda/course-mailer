@@ -36,8 +36,8 @@ public class MailControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void sendEmailSuccess() throws Exception {
-        mvc.perform(post("/sendEmail")
+    public void sendSuccess() throws Exception {
+        mvc.perform(post("/send")
                 .param("from", "gadget.mailsender@gmail.com")
                 .param("address", "aki@gmail.com")
                 .param("subject", "is a subject")
@@ -52,12 +52,12 @@ public class MailControllerTest {
 
     @Test
     public void showErrorIfEmptyMailAddress() throws Exception {
-        mvc.perform(post("/sendEmail")
+        mvc.perform(post("/send")
                 .param("from", "gadget.mailsender@gmail.com")
                 .param("address", "")
                 .param("subject", "is a subject")
                 .param("body", "is a body"))
-                .andExpect(model().attribute("error", "error"))
+                .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).send(any());
@@ -65,12 +65,12 @@ public class MailControllerTest {
 
     @Test
     public void showErrorIfEmptySubject() throws Exception {
-        mvc.perform(post("/sendEmail")
+        mvc.perform(post("/send")
                 .param("from", "gadget.mailsender@gmail.com")
                 .param("address", "aki@gmail.com")
                 .param("subject", "")
                 .param("body", "is a body"))
-                .andExpect(model().attribute("error", "error"))
+                .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).send(any());
@@ -78,15 +78,27 @@ public class MailControllerTest {
 
     @Test
     public void showErrorIfEmptyBody() throws Exception {
-        mvc.perform(post("/sendEmail")
+        mvc.perform(post("/send")
                 .param("from", "gadget.mailsender@gmail.com")
                 .param("address", "aki@gmail.com")
                 .param("subject", "is a subject")
                 .param("body", ""))
-                .andExpect(model().attribute("error", "error"))
+                .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).send(any());
+    }
+
+    @Test
+    public void manyAddress() throws Exception {
+        mvc.perform(post("/send")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "abcdefghi123@xxx.com;stanly@xxx.com")
+                .param("subject", "is a subject")
+                .param("body", "hello. this is body"))
+                .andExpect(view().name("send"));
+
+        verify(mailService, times(2)).send(any());
     }
 
 }
