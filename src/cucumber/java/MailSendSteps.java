@@ -77,7 +77,7 @@ public class MailSendSteps {
         Assert.assertEquals(errorArea, actual);
     }
 
-    @Then("^receive mail count is \"([^\"]*)\"$")
+    @Then("^receive mail count is (\\d+)$")
     public void receive_mail_count_is(String count) throws Throwable {
         messages = wiser.getMessages();
         assertThat(messages.size(), is(new Integer(count)));
