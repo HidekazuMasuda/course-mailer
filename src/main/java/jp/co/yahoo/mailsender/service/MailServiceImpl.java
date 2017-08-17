@@ -23,7 +23,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void send(MailInfo mailInfo) throws Exception {
 
-        if (mailInfo.getFrom() == null || mailInfo.getFrom().equals("")) {
+        if (isNullOrEmpty(mailInfo)) {
             throw new Exception("from field is empty");
         } else if (mailInfo.getTo() == null || mailInfo.getTo().equals("")) {
             throw new Exception("to field is empty");
@@ -40,6 +40,12 @@ public class MailServiceImpl implements MailService {
         String value = mailClient.send();
         System.out.println(value);
 
+    }
+
+    private boolean isNullOrEmpty(MailInfo mailInfo) {
+
+
+        return mailInfo.getFrom() == null || mailInfo.getFrom().equals("");
     }
 
     private void buildMailInfo(MailInfo mailInfo, SimpleEmail mailClient) throws EmailException {

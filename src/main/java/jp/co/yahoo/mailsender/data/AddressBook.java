@@ -3,7 +3,6 @@ package jp.co.yahoo.mailsender.data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 
-import javax.naming.Name;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,18 +22,22 @@ public class AddressBook {
             return false;
         }
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+        try (BufferedWriter writer = getWriter(file)) {
             for (AddressItem addressItem : addressItems) {
                 ObjectMapper mapper = new ObjectMapper();
                 String addressItemAsString = mapper.writeValueAsString(addressItem);
-                bufferedWriter.write(addressItemAsString);
-                bufferedWriter.newLine();
+                writer.write(addressItemAsString);
+                writer.newLine();
             }
         }
 
         return true;
+    }
+
+    private BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
+        return new BufferedWriter(
+                new OutputStreamWriter(
+                        new FileOutputStream(file, true), "UTF-8"));
     }
 
     public void add(AddressItem addressItem) {
