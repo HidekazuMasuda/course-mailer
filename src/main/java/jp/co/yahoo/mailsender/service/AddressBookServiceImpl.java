@@ -2,6 +2,7 @@ package jp.co.yahoo.mailsender.service;
 
 import jp.co.yahoo.mailsender.data.AddressBook;
 import jp.co.yahoo.mailsender.data.AddressItem;
+import jp.co.yahoo.mailsender.utils.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +15,21 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public void add(AddressItem addressItem) throws Exception {
-        addressBook.add(addressItem);
+        if(Validator.isMailAddress(addressItem.getMailAddress())){
+            addressBook.add(addressItem);
+            addressBook.save();
+        }else{
+            throw new Exception("mail address is empty");
+        }
     }
 
     @Override
-    public List<AddressItem> get() {
+    public List<AddressItem> get() throws RuntimeException {
+        try {
+            addressBook.load();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return addressBook.getAddressItems();
     }
 }

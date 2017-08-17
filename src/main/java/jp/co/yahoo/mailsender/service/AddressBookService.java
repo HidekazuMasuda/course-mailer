@@ -9,5 +9,5 @@ public interface AddressBookService {
 
     void add(AddressItem addressItem) throws Exception;
 
-    List<AddressItem> get();
+    List<AddressItem> get() throws RuntimeException;
 }
