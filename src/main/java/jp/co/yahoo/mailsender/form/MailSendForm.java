@@ -1,8 +1,20 @@
 package jp.co.yahoo.mailsender.form;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class MailSendForm {
+
+
+    @NotEmpty
+
     private String address;
+    @NotEmpty
     private String subject;
+    @NotEmpty
     private String body;
 
     public String getAddress() {
