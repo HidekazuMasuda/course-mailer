@@ -14,42 +14,31 @@ import static org.junit.Assert.assertThat;
 public class AddressItemBookTest {
 
     AddressBook addressBook = new AddressBook();
-    AddressItem addressItem = new AddressItem("stanly@odd-e.com");
+    AddressItem addressItem = new AddressItem("stanly@odd-e.com", "stanly");
 
-    @Before
-    public void initFile(){
-        File file = new File(AddressBook.FILE_PATH);
-        file.delete();
-    }
 
     @Test
-    public void normalSave() throws Exception {
+    public void addAddressItem() throws Exception {
         this.addressBook.add(addressItem);
-        assertThat(this.addressBook.save(), is(true));
+        assertThat(addressBook.getAddressItems().get(0).getMailAddress(), is(addressItem.getMailAddress()));
     }
 
     @Test
     public void existFile() throws Exception {
         this.addressBook.add(addressItem);
         this.addressBook.save();
-
         assertThat(new File(AddressBook.FILE_PATH).exists(), is(true));
     }
 
     @Test
-    public void checkContent() throws Exception {
-
+    public void saveAddressItem() throws Exception {
         this.addressBook.add(addressItem);
         this.addressBook.save();
 
-        File file = new File(AddressBook.FILE_PATH);
-        List<String> addressList = FileUtils.readLines(file, "utf-8");
-
-        ObjectMapper mapper = new ObjectMapper();
-        String addressItemAsString = mapper.writeValueAsString(addressItem);
+        List<String> addressList = FileUtils.readLines(new File(AddressBook.FILE_PATH), "utf-8");
 
         assertThat(addressList.size(), is(1));
-        assertThat(addressList.get(0), is(addressItemAsString));
+        assertThat(addressList.get(0), is(addressItem.addressItemToString()));
     }
 
     @Test
@@ -61,6 +50,7 @@ public class AddressItemBookTest {
 
         assertThat(addressBook.getAddressItems().size(), is(1));
         assertThat(addressBook.getAddressItems().get(0).getMailAddress(), is(addressItem.getMailAddress()));
+        assertThat(addressBook.getAddressItems().get(0).getName(), is(addressItem.getName()));
     }
 
     @Test(expected = Exception.class)

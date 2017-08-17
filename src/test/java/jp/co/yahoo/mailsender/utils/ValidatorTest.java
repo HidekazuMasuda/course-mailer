@@ -50,31 +50,18 @@ public class ValidatorTest {
 
     @Test
     public void nullSubject() throws Exception {
-        assertThat(Validator.isSubject(null), is(false));
+        assertThat(Validator.isNotEmpty(null), is(false));
     }
 
     @Test
     public void emptySubject() throws Exception {
-        assertThat(Validator.isSubject(""), is(false));
+        assertThat(Validator.isNotEmpty(""), is(false));
     }
 
     @Test
     public void normalSubject() throws Exception {
-        assertThat(Validator.isSubject("subject"), is(true));
+        assertThat(Validator.isNotEmpty("subject"), is(true));
     }
 
-    @Test
-    public void nullBody() throws Exception {
-        assertThat(Validator.isBody(null), is(false));
-    }
 
-    @Test
-    public void emptyBody() throws Exception {
-        assertThat(Validator.isBody(""), is(false));
-    }
-
-    @Test
-    public void normalBody() throws Exception {
-        assertThat(Validator.isBody("body"), is(true));
-    }
 }

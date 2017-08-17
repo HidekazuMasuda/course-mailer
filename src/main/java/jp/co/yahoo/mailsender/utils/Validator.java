@@ -19,18 +19,12 @@ public class Validator {
         return matcher.matches();
     }
 
-    public static boolean isSubject(final String subject) {
-        if (subject == null || "".equals(subject)) {
+    public static boolean isNotEmpty(final String target) {
+        if (target == null || "".equals(target)) {
             return false;
         }
         return true;
     }
 
-    public static boolean isBody(final String body) {
-        if (body == null || "".equals(body)) {
-            return false;
-        }
-        return true;
-    }
 }
 
