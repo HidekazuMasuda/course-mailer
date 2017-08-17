@@ -1,9 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Gadget Mailsender</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
 </head>
 <body>
 <div class="container">
@@ -11,6 +12,10 @@
         <div class="col-md-3"></div>
         <div class="col-md-6">
             <h1>Contact List</h1>
+            <ul class="nav nav-tabs">
+                <li role="presentation"><a href="/send">HOME</a></li>
+                <li role="presentation" class="active"><a href="/contact-list">Contact List</a></li>
+            </ul>
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <h3 class="panel-title">Error</h3>
@@ -18,13 +23,16 @@
                 <div class="panel-body" id="error-area">
                 </div>
             </div>
-            <form action="censor" method="post">
+            <form action="/contact-list" method="post">
                 <div class="form-group">
                     <label for="address">Address</label>
                     <table>
                         <tr>
-                            <td><input type="text" class="form-control" name="address" id="address" placeholder="address"/></td>
-                            <td><button type="submit" id="add" class="btn btn-default">Add</button></td>
+                            <td><input type="text" class="form-control" name="address" id="address"
+                                       placeholder="address"/></td>
+                            <td>
+                                <button type="submit" id="add" class="btn btn-default">Add</button>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -33,10 +41,11 @@
             <br/>
             <label>Address List</label>
             <br/>
-            <div>
-                <a href="#">xxx@gmail.com</a><br/>
-                <a href="#">yyy@gmail.com</a><br/>
-            </div>
+            <dl>
+                <dt th:each="mail : ${contactList}">
+                    <a href="#" th:text="${mail.mailAddress}"></a>
+                </dt>
+            </dl>
         </div>
         <div class="col-md-3"></div>
     </div>
