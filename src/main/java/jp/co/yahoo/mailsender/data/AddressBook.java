@@ -52,9 +52,8 @@ public class AddressBook {
     }
 
     private BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
-        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
     }
-
 
     public List<AddressItem> getAddressItems() {
         return addressItems;

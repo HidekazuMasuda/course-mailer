@@ -101,4 +101,28 @@ public class MailControllerTest {
         verify(mailService, times(2)).send(any());
     }
 
+    @Test
+    public void manyAddressWithSpace() throws Exception {
+        mvc.perform(post("/send")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "abcdefghi123@xxx.com ; stanly@xxx.com")
+                .param("subject", "is a subject")
+                .param("body", "hello. this is body"))
+                .andExpect(view().name("send"));
+
+        verify(mailService, times(2)).send(any());
+    }
+
+    @Test
+    public void manyAddressWithInvalidAddress() throws Exception {
+        mvc.perform(post("/send")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "abcdefghi123@xxx.com ; xxx.com; stanly@xxx.com")
+                .param("subject", "is a subject")
+                .param("body", "hello. this is body"))
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).send(any());
+    }
+
 }
