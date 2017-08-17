@@ -13,7 +13,7 @@ public class Validator {
         if (mailAddress == null || "".equals(mailAddress)) {
             return false;
         }
-        String mailPattern = "^[a-zA-Z0-9-]+@[a-zA-Z0-9.-]+$";
+        String mailPattern = "^[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+$";
         Pattern pattern = Pattern.compile(mailPattern);
         Matcher matcher = pattern.matcher(mailAddress);
         return matcher.matches();

@@ -97,23 +97,24 @@ Scenario: address format error: start with @
 
 
 # success case
-@developing
 Scenario: send mail success one
   Given address is "xxx@gmail.com"
   And subject is "hello"
   And body is "message"
   When send
   Then error_area is ""
-  And receive mail count is 1
-  And receive mail from is "gadget.mailsender@gmail.com"
-  And receive mail to is "xxx@gmail.com"
-  And receive mail subject is "hello"
-  And receive mail body is "message"
+  And should receive the following emails:
+    | from                        | to            | subject       | body      |
+    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
 
 @developing
-Scenario: send mail success multi
+Scenario: send mail success two
   Given address is "xxx@gmail.com;yyy@gmail.com"
   And subject is "hello"
   And body is "message"
   When send
   Then error_area is ""
+  And should receive the following emails:
+    | from                        | to            | subject       | body      |
+    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
+    | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |

@@ -1,3 +1,4 @@
+import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -5,6 +6,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import jp.co.yahoo.mailsender.MailsenderApplication;
+import jp.co.yahoo.mailsender.service.MailInfo;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +18,9 @@ import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
 import java.util.List;
+import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,7 +33,6 @@ public class MailSendSteps {
 
     private WebDriver driver;
     private Wiser wiser;
-    private List<WiserMessage> messages;
 
     @Before
     public void setup() {
@@ -77,33 +80,16 @@ public class MailSendSteps {
         Assert.assertEquals(errorArea, actual);
     }
 
-    @Then("^receive mail count is \"([^\"]*)\"$")
-    public void receive_mail_count_is(String count) throws Throwable {
-        messages = wiser.getMessages();
-        assertThat(messages.size(), is(new Integer(count)));
-    }
-
-    @Then("^receive mail from is \"([^\"]*)\"$")
-    public void receive_mail_from_is(String from) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getEnvelopeSender(), is(from));
-    }
-
-    @Then("^receive mail to is \"([^\"]*)\"$")
-    public void receive_mail_to_is(String to) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getEnvelopeReceiver(), is(to));
-    }
-
-    @Then("^receive mail subject is \"([^\"]*)\"$")
-    public void receive_mail_subject_is(String subject) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getMimeMessage().getSubject(), is(subject));
-    }
-
-    @Then("^receive mail body is \"([^\"]*)\"$")
-    public void receive_mail_body_is(String body) throws Throwable {
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(new String(wiserMessage.getData()).contains(body), is(true));
+    @Then("^should receive the following emails:$")
+    public void should_receive_the_following_emails(List<MailInfo> mails) throws Throwable {
+        List<WiserMessage> messages = wiser.getMessages();
+        for (int i = 0; i < mails.size(); i++) {
+            MailInfo mail = mails.get(0);
+            WiserMessage wiserMessage = messages.get(i);
+            assertThat(wiserMessage.getEnvelopeSender(), is(mail.getFrom()));
+            assertThat(wiserMessage.getEnvelopeReceiver(), is(mail.getTo()));
+            assertThat(wiserMessage.getMimeMessage().getSubject(), is(mail.getSubject()));
+            assertThat(wiserMessage.toString(), containsString(mail.getBody()));
+        }
     }
 }
