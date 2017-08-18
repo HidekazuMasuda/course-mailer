@@ -53,10 +53,12 @@ public class ContactListControllerTest {
     public void addEmailAddress() throws Exception {
 
         mvc.perform(post("/contact-list")
-                .param("address", "aaa@yahoo.co.jp"))
+                .param("address", "aaa@yahoo.co.jp")
+                .param("name", "aaa"))
                 .andExpect(view().name("contact-list"));
 
         verify(addressBookService).add(argThat(mail -> mail.getMailAddress().equals("aaa@yahoo.co.jp")));
+        verify(addressBookService).add(argThat(mail -> mail.getName().equals("aaa")));
     }
 
 }
