@@ -10,4 +10,6 @@ public interface AddressBookService {
     void add(AddressItem addressItem) throws Exception;
 
     List<AddressItem> get() throws RuntimeException;
+
+    AddressItem findByAddress(String address) throws Exception;
 }

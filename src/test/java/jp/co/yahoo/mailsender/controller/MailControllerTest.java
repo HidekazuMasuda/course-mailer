@@ -1,5 +1,7 @@
 package jp.co.yahoo.mailsender.controller;
 
+import jp.co.yahoo.mailsender.data.AddressBook;
+import jp.co.yahoo.mailsender.data.AddressItem;
 import jp.co.yahoo.mailsender.service.MailInfo;
 import jp.co.yahoo.mailsender.service.MailService;
 import org.junit.Test;
@@ -125,4 +127,23 @@ public class MailControllerTest {
         verify(mailService, never()).send(any());
     }
 
+    @Test
+    public void replaceSubject() throws Exception {
+        AddressBook addressBook = new AddressBook();
+        AddressItem addressItem = new AddressItem("aki@gmail.com", "Aki");
+        addressBook.add(addressItem);
+        addressBook.save();
+
+        mvc.perform(post("/send")
+                .param("from", "gadget.mailsender@gmail.com")
+                .param("address", "aki@gmail.com")
+                .param("subject", "Hello $name")
+                .param("body", "hello. this is body"))
+                .andExpect(view().name("send"));
+
+        verify(mailService).send(argThat(mail -> mail.getSubject().equals("Hello Aki")));
+        verify(mailService).send(argThat(mail -> mail.getFrom().equals("gadget.mailsender@gmail.com")));
+        verify(mailService).send(argThat(mail -> mail.getTo().equals("aki@gmail.com")));
+        verify(mailService).send(argThat(mail -> mail.getBody().equals("hello. this is body")));
+    }
 }

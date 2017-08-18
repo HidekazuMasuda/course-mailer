@@ -32,4 +32,8 @@ public class AddressBookServiceImpl implements AddressBookService {
         }
         return addressBook.getAddressItems();
     }
+
+    public AddressItem findByAddress(String address) throws Exception {
+        return addressBook.findByAddress(address);
+    }
 }
