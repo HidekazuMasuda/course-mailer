@@ -111,3 +111,58 @@ Scenario: address format error: start with @
   When send
   Then error_area is "error"
 
+### replace subject placeholder
+## success case
+@developing
+Scenario: replace subject success one person
+  Given subject is "Hi $name"
+  And address is "user1@gmail.com"
+  And body is "message"
+  When send
+  Then error_area is none
+  And should receive the following emails:
+      | from                        | to            | subject       | body      |
+      | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | message   |
+
+@developing
+Scenario: replace subject success two person
+  Given subject is "Hi consumers"
+  And address is "user1@gmail.com;user2@gmail.com"
+  And body is "message"
+  When send
+  Then error_area is none
+  And should receive the following emails:
+      | from                        | to            | subject       | body      |
+      | gadget.mailsender@gmail.com | user1@gmail.com | Hi consumers    | message   |
+      | gadget.mailsender@gmail.com | user2@gmail.com | Hi consumers    | message   |
+
+@developing
+Scenario: replace subject success two person but no name attribute
+  Given subject is "Hi consumers"
+  And address is "user1@gmail.com;noname@gmail.com"
+  And body is "message"
+  When send
+  Then error_area is none
+  And should receive the following emails:
+      | from                        | to            | subject       | body      |
+      | gadget.mailsender@gmail.com | user1@gmail.com | Hi consumers    | message   |
+      | gadget.mailsender@gmail.com | noname@gmail.com | Hi consumers    | message   |
+
+
+## error case
+@developing
+Scenario: name attribute is empty
+  Given subject is "Hi $name"
+  And address is "noname@gmail.com"
+  And body is "message"
+  When send
+  Then error_area is "error"
+
+@developing
+Scenario: name attribute is empty only 1 person
+  Given subject is "Hi $name"
+  And address is "noname@gmail.com;user1@gmail.com"
+  And body is "message"
+  When send
+  Then error_area is "error"
+

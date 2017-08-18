@@ -6,12 +6,15 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import jp.co.yahoo.mailsender.MailsenderApplication;
+import jp.co.yahoo.mailsender.data.AddressItem;
+import jp.co.yahoo.mailsender.service.AddressBookService;
 import jp.co.yahoo.mailsender.service.MailInfo;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,8 +39,11 @@ public class MailSendSteps {
     private WebDriver driver;
     private Wiser wiser;
 
+    @Autowired
+    AddressBookService addressBookService;
+
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         if (driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
@@ -47,6 +53,12 @@ public class MailSendSteps {
         wiser.setPort(2500);
         wiser.setHostname("localhost");
         wiser.start();
+
+
+        addressBookService.add(new AddressItem("user1@gmail.com", "user1"));
+        addressBookService.add(new AddressItem("user2@gmail.com", "user2"));
+        addressBookService.add(new AddressItem("noname@gmail.com", ""));
+
 
     }
 
