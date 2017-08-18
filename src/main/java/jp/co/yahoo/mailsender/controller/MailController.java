@@ -4,7 +4,6 @@ import jp.co.yahoo.mailsender.form.MailSendForm;
 import jp.co.yahoo.mailsender.service.MailInfo;
 import jp.co.yahoo.mailsender.service.MailService;
 import jp.co.yahoo.mailsender.utils.Validator;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,17 +45,21 @@ public class MailController {
             return "send";
         }
 
-        for (String address : addresses) {
-            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, form.getSubject(), form.getBody());
-            try {
-                mailService.send(mail);
-            } catch (Exception e) {
-                model.addAttribute("errorMessage", "error");
-                return "send";
-            }
+        try {
+            sendMultiple(addresses, form.getSubject(), form.getBody());
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "error");
+            return "send";
         }
 
         return "send";
+    }
+
+    private void sendMultiple(String[] addresses, String subject, String body) throws Exception {
+        for (String address : addresses) {
+            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, body);
+            mailService.send(mail);
+        }
     }
 
 }
