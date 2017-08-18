@@ -79,7 +79,6 @@ public class ContactListSteps {
     @Then("^ContactList error_area is \"([^\"]*)\"$")
     public void error_area_is(String errorArea) throws Throwable {
         String actual = driver.findElement(By.id("error-area")).getText();
-
         Assert.assertEquals(errorArea, actual);
     }
 

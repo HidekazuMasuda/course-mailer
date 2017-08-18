@@ -7,7 +7,6 @@ Scenario: add a wrong address
   Then ContactList error_area is "error"
 
 # duplicate address error case
-@developing
 Scenario: add a duplicate address
   Given ContactList address is "xxx@gmail.com"
   And ContactList has "xxx@gmail.com"
@@ -15,7 +14,6 @@ Scenario: add a duplicate address
   Then ContactList error_area is "error"
 
 # name only error case
-@developing
 Scenario: add a name only
   Given ContactList address is ""
   And ContactList name is "xxx"
