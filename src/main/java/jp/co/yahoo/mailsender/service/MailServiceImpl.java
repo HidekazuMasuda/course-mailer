@@ -22,24 +22,10 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void send(MailInfo mailInfo) throws Exception {
-
-        if (isNullOrEmpty(mailInfo)) {
-            throw new Exception("from field is empty");
-        } else if (mailInfo.getTo() == null || mailInfo.getTo().equals("")) {
-            throw new Exception("to field is empty");
-        } else if (mailInfo.getSubject() == null || mailInfo.getSubject().equals("")) {
-            throw new Exception("subject field is empty");
-        } else if (mailInfo.getBody() == null || mailInfo.getBody().equals("")) {
-            throw new Exception("body field is empty");
-        }
-
         SimpleEmail mailClient = new SimpleEmail();
         initMailClient(mailClient);
         buildMailInfo(mailInfo, mailClient);
-
-        String value = mailClient.send();
-        System.out.println(value);
-
+        mailClient.send();
     }
 
     private boolean isNullOrEmpty(MailInfo mailInfo) {

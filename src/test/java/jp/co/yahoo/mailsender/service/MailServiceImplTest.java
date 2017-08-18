@@ -51,45 +51,4 @@ public class MailServiceImplTest {
         assertThat(wiserMessage.getEnvelopeReceiver(), is("gadget.mailsender@gmail.com"));
         assertThat(wiserMessage.getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
     }
-
-    @Test(expected = Exception.class)
-    public void sendWithFromFieldEmpty() throws Exception {
-        service.send(validMail().withFrom("").build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithToFieldEmpty() throws Exception {
-        service.send(validMail().withTo("").build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithSubjectFieldEmpty() throws Exception {
-        service.send(validMail().withSubject("").build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithBodyFieldEmpty() throws Exception {
-        service.send(validMail().withBody("").build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithFromFieldNull() throws Exception {
-        service.send(validMail().withFrom(null).build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithToFieldNull() throws Exception {
-        service.send(validMail().withTo(null).build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithSubjectFieldNull() throws Exception {
-        service.send(validMail().withSubject(null).build());
-    }
-
-    @Test(expected = Exception.class)
-    public void sendWithBodyFieldNull() throws Exception {
-        service.send(validMail().withBody(null).build());
-    }
-
 }
