@@ -67,6 +67,10 @@ public class MailController {
                         throw new Exception("name attribute is empty!!");
                     }
                     replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
+                }else {
+                    if (StringUtils.contains(subject, "$name")){
+                        throw new Exception("email address is not registered");
+                    }
                 }
 
                 MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, form.getBody());

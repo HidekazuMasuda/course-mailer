@@ -131,7 +131,15 @@ public class MailControllerTest {
         verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(1).getSubject().equals("Hello Stanly")));
     }
 
-    
+    @Test
+    public void notReplaceWhenNotRegisteredAddress() throws Exception {
+        MailInfo mailInfo = validMail().withSubject("Hello $name").withTo("foobar@xxx.com").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).sendMultiple(any());
+    }
 
     private ResultActions getPerform(MailInfo mailInfo) throws Exception {
         return mvc.perform(post("/send")
