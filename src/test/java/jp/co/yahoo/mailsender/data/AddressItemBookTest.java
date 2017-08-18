@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 public class AddressItemBookTest {
 
     AddressBook addressBook = new AddressBook();
-    AddressItem addressItem = new AddressItem("stanly@odd-e.com");
+    AddressItem addressItem = new AddressItem("stanly@odd-e.com", "stanly");
 
 
     @Test
@@ -50,6 +50,7 @@ public class AddressItemBookTest {
 
         assertThat(addressBook.getAddressItems().size(), is(1));
         assertThat(addressBook.getAddressItems().get(0).getMailAddress(), is(addressItem.getMailAddress()));
+        assertThat(addressBook.getAddressItems().get(0).getName(), is(addressItem.getName()));
     }
 
     @Test(expected = Exception.class)
@@ -57,5 +58,12 @@ public class AddressItemBookTest {
 
         addressBook.add(addressItem);
         addressBook.add(addressItem);
+    }
+
+    @Test
+    public void findByAddress() throws Exception {
+        AddressItem actual = addressBook.findByAddress("stanly@odd-e.com");
+        assertThat(actual.getName(), is(addressItem.getName()));
+        assertThat(actual.getMailAddress(), is(addressItem.getMailAddress()));
     }
 }

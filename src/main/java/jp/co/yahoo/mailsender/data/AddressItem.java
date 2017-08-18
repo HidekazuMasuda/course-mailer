@@ -9,11 +9,19 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class AddressItem implements Serializable {
+
     private String mailAddress;
 
-    @JsonCreator
-    public AddressItem(@JsonProperty("mailAddress") String mailAddress) {
+    private String name;
+
+    public AddressItem(String mailAddress) {
         this.mailAddress = mailAddress;
+    }
+
+    @JsonCreator
+    public AddressItem(@JsonProperty("mailAddress") String mailAddress, @JsonProperty("name") String name) {
+        this.mailAddress = mailAddress;
+        this.name = name;
     }
 
     public String getMailAddress() {
@@ -22,6 +30,14 @@ public class AddressItem implements Serializable {
 
     public void setMailAddress(String mailAddress) {
         this.mailAddress = mailAddress;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String addressItemToString() throws IOException {

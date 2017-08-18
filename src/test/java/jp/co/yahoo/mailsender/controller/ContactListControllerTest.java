@@ -5,6 +5,7 @@ import jp.co.yahoo.mailsender.service.AddressBookService;
 import jp.co.yahoo.mailsender.service.MailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
@@ -37,25 +38,11 @@ public class ContactListControllerTest {
     @Autowired
     private MockMvc mvc;
 
-
-    public void sendEmailSuccess() throws Exception {
-        mvc.perform(get("/contact-list").param("subject", "is a subject"))
-                .andExpect(view().name("contact-list"));
-
-        //verify(mailService).send(argThat(mail -> mail.getSubject().equals("is a subject")));
-    }
-
-    @Test
-    public void getEmptyContactList() throws Exception {
-        mvc.perform(get("/contact-list"))
-                .andExpect(model().attributeExists("contactList"));
-    }
-
     @Test
     public void getSize1ContactList() throws Exception {
 
         List<AddressItem> result = new ArrayList<>();
-        result.add(new AddressItem("aaa"));
+        result.add(new AddressItem("aaa@example.com"));
 
         when(addressBookService.get()).thenReturn(result);
         mvc.perform(get("/contact-list"))
@@ -65,14 +52,11 @@ public class ContactListControllerTest {
     @Test
     public void addEmailAddress() throws Exception {
 
-        List<AddressItem> result = new ArrayList<>();
-        result.add(new AddressItem("aaa"));
-
         mvc.perform(post("/contact-list")
                 .param("address", "aaa@yahoo.co.jp"))
                 .andExpect(view().name("contact-list"));
 
         verify(addressBookService).add(argThat(mail -> mail.getMailAddress().equals("aaa@yahoo.co.jp")));
-
     }
+
 }

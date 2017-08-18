@@ -16,15 +16,19 @@ public class AddressBook {
             addressItems.clear();
         }
 
-        List<String> addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
-        for ( String address : addressList ){
-            add(AddressItem.convertJsonToObject(address));
+        try {
+            List<String> addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
+            for (String address : addressList) {
+                add(AddressItem.convertJsonToObject(address));
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("WARN: File not found. " + FILE_PATH);
         }
     }
 
     public void add(AddressItem addressItem) throws Exception {
-        for(AddressItem item : this.addressItems){
-            if(item.getMailAddress().equals(addressItem.getMailAddress())){
+        for (AddressItem item : this.addressItems) {
+            if (item.getMailAddress().equals(addressItem.getMailAddress())) {
                 throw new Exception("Duplicate mail address");
             }
         }
@@ -37,7 +41,7 @@ public class AddressBook {
         File directory = new File(file.getParent());
         directory.mkdirs();
 
-        if(file.exists() == false && file.createNewFile() == false){
+        if (file.exists() == false && file.createNewFile() == false) {
             return false;
         }
 
@@ -46,9 +50,21 @@ public class AddressBook {
                 writer.write(addressItem.addressItemToString());
                 writer.newLine();
             }
+
+            addressItems.clear();
         }
 
         return true;
+    }
+
+    public AddressItem findByAddress(String address) throws Exception {
+        load();
+        for (AddressItem addressItem : addressItems) {
+            if (addressItem.getMailAddress().equals(address)) {
+                return addressItem;
+            }
+        }
+        return null;
     }
 
     private BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
