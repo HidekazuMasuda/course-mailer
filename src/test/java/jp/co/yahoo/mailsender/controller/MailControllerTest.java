@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
+
 import static jp.co.yahoo.mailsender.service.MailBuilder.validMail;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,16 +40,13 @@ public class MailControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void sendSuccess() throws Exception {
-        MailInfo mailInfo = validMail().build();
+    public void sendToMultipleAddresses() throws Exception {
+        String addresses = "abc@gmail.com;john@gmail.com";
+        MailInfo mailInfo = validMail().withTo(addresses).build();
 
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
+        getPerform(mailInfo).andExpect(view().name("send"));
 
-        verify(mailService).send(argThat(mail -> mail.getSubject().equals(mailInfo.getSubject())));
-        verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
-        verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
-        verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
+        verify(mailService).sendMultiple(addresses.split(";"), mailInfo.getSubject(), mailInfo.getBody());
     }
 
     @Test
@@ -58,7 +57,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test
@@ -70,7 +69,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test
@@ -82,29 +81,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).send(any());
-    }
-
-    @Test
-    public void manyAddress() throws Exception {
-
-        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com;stanly@xxx.com").build();
-
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService, times(2)).send(any());
-    }
-
-    @Test
-    public void manyAddressWithSpace() throws Exception {
-
-        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com ; stanly@xxx.com").build();
-
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService, times(2)).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test
@@ -116,7 +93,7 @@ public class MailControllerTest {
                 .andExpect(view().name("send"));
 
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     private ResultActions getPerform(MailInfo mailInfo) throws Exception {

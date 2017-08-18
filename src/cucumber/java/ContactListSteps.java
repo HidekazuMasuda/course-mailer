@@ -58,6 +58,11 @@ public class ContactListSteps {
         driver.findElement(By.id("address")).sendKeys(address);
     }
 
+    @Given("^ContactList name is \"([^\"]*)\"$")
+    public void name_is(String name) throws Throwable {
+        driver.findElement(By.id("name")).sendKeys(name);
+    }
+
     @Given("^ContactList is empty")
     public void clear_contact_list() throws Throwable {
         AddressBook addressBook = new AddressBook();
@@ -83,9 +88,14 @@ public class ContactListSteps {
     }
 
     @Then("^ContactList address is added \"([^\"]*)\"$")
-    public void contact_list_has(String address) throws Throwable {
-        String list = driver.findElement(By.id("address-list")).getText();
-        int index = list.indexOf(address);
-        Assert.assertFalse("can not find address:" + address, index > 0);
+    public void contact_list_address_has(String address) throws Throwable {
+        String html = driver.findElement(By.id("address-list")).getText();
+        Assert.assertThat(html.contains(address), is(true));
+    }
+
+    @Then("^ContactList name is added \"([^\"]*)\"$")
+    public void contact_list_name_has(String name) throws Throwable {
+        String html = driver.findElement(By.id("address-list")).getText();
+        Assert.assertThat(html.contains(name), is(true));
     }
 }
