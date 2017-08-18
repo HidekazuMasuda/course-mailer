@@ -19,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
+import java.io.File;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -41,6 +42,10 @@ public class ContactListSteps {
             driver = new ChromeDriver();
             driver.get("http://localhost:" + port + "/contact-list");
         }
+
+        File file = new File(AddressBook.FILE_PATH);
+        boolean isDelete = file.delete();
+        System.out.println("file delete result is " + isDelete);
     }
 
     @After
@@ -74,6 +79,7 @@ public class ContactListSteps {
     @Then("^ContactList error_area is \"([^\"]*)\"$")
     public void error_area_is(String errorArea) throws Throwable {
         String actual = driver.findElement(By.id("error-area")).getText();
+
         Assert.assertEquals(errorArea, actual);
     }
 

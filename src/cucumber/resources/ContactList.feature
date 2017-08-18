@@ -1,7 +1,6 @@
 Feature: Refund item
 
 # address format error case
-@developing
 Scenario: add a wrong address
   Given ContactList address is "xxx"
   When add
