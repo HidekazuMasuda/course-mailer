@@ -1,6 +1,5 @@
 package jp.co.yahoo.mailsender.service;
 
-import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,34 +21,24 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void send(MailInfo mailInfo) throws Exception {
-        SimpleEmail mailClient = new SimpleEmail();
-        initMailClient(mailClient);
-        buildMailInfo(mailInfo, mailClient);
-        mailClient.send();
-    }
+        SimpleEmail simpleEmail = new SimpleEmail();
 
-    private void buildMailInfo(MailInfo mailInfo, SimpleEmail mailClient) throws EmailException {
-        mailClient.setFrom(mailInfo.getFrom());
-        mailClient.setSubject(mailInfo.getSubject());
-        mailClient.setMsg(mailInfo.getBody());
-        mailClient.addTo(mailInfo.getTo());
-    }
-
-    private void initMailClient(SimpleEmail mailClient) {
-
-
-        mailClient.setHostName(mailHost);
-
+        simpleEmail.setHostName(mailHost);
         if (sslEnable) {
-            mailClient.setSslSmtpPort(sslSmtpPort);
-            mailClient.setSSL(true);
+            simpleEmail.setSslSmtpPort(sslSmtpPort);
+            simpleEmail.setSSL(true);
         } else {
-            mailClient.setSmtpPort(smtpPort);
+            simpleEmail.setSmtpPort(smtpPort);
         }
 
-        mailClient.setCharset(CHARSET);
-        mailClient.setAuthentication(SENDER_NAME, PASSWORD);
+        simpleEmail.setCharset(CHARSET);
+        simpleEmail.setAuthentication(SENDER_NAME, PASSWORD);
 
+        simpleEmail.setFrom(mailInfo.getFrom());
+        simpleEmail.setSubject(mailInfo.getSubject());
+        simpleEmail.setMsg(mailInfo.getBody());
+        simpleEmail.addTo(mailInfo.getTo());
+        simpleEmail.send();
     }
 
 }
