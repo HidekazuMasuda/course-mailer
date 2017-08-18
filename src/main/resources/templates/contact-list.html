@@ -16,7 +16,7 @@
                 <li role="presentation"><a href="/send">HOME</a></li>
                 <li role="presentation" class="active"><a href="/contact-list">Contact List</a></li>
             </ul>
-            <div class="panel panel-danger">
+            <div th:if="${errorMessage} eq error" class="panel panel-danger">
                 <div class="panel-heading">
                     <h3 class="panel-title">Error</h3>
                 </div>

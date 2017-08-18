@@ -20,5 +20,5 @@ Scenario: add a address
   Given ContactList address is "xxx@gmail.com"
   And ContactList is empty
   When add
-  Then ContactList error_area is ""
+  Then error_area is none
   And ContactList address is added "xxx@gmail.com"
