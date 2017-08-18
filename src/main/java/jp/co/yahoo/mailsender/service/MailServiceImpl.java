@@ -28,12 +28,6 @@ public class MailServiceImpl implements MailService {
         mailClient.send();
     }
 
-    private boolean isNullOrEmpty(MailInfo mailInfo) {
-
-
-        return mailInfo.getFrom() == null || mailInfo.getFrom().equals("");
-    }
-
     private void buildMailInfo(MailInfo mailInfo, SimpleEmail mailClient) throws EmailException {
         mailClient.setFrom(mailInfo.getFrom());
         mailClient.setSubject(mailInfo.getSubject());
