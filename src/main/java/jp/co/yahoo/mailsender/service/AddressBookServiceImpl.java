@@ -11,10 +11,11 @@ import java.util.List;
 public class AddressBookServiceImpl implements AddressBookService {
 
 
-    private AddressBook addressBook = new AddressBook();
+    private AddressBook addressBook  = new AddressBook();
 
     @Override
     public void add(AddressItem addressItem) throws Exception {
+        addressBook.load();
         if(Validator.isMailAddress(addressItem.getMailAddress())){
             addressBook.add(addressItem);
             addressBook.save();

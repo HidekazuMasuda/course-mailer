@@ -52,30 +52,31 @@ public class MailController {
             return "send";
         }
 
-        List<AddressItem> addressItems = addressBookService.get();
-
-        for (String address : addresses) {
-
-            try {
-                AddressItem addressItem = addressBookService.findByAddress(address);
-
-                String subject = form.getSubject();
-                if (addressItem != null) {
-                    if (StringUtils.isEmpty(addressItem.getName())) {
-                        throw new Exception("name attribute is empty!!");
-                    }
-                    subject = StringUtils.replace(form.getSubject(), "$name", addressItem.getName());
-                }
-
-                MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, form.getBody());
-                mailService.send(mail);
-            } catch (Exception e) {
-                model.addAttribute("errorMessage", "error");
-                return "send";
-            }
+        try {
+            sendMultiple(addresses, form.getSubject(), form.getBody());
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "error");
+            return "send";
         }
 
         return "send";
+    }
+
+    private void sendMultiple(String[] addresses, String subject, String body) throws Exception {
+        for (String address : addresses) {
+
+            AddressItem addressItem = addressBookService.findByAddress(address);
+
+            if (addressItem != null) {
+                if (StringUtils.isEmpty(addressItem.getName())) {
+                    throw new Exception("name attribute is empty!!");
+                }
+                subject = StringUtils.replace(subject, "$name", addressItem.getName());
+            }
+
+            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, body);
+            mailService.send(mail);
+        }
     }
 
 }

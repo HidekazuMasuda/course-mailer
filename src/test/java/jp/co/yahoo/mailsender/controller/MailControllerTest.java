@@ -12,7 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
+import static jp.co.yahoo.mailsender.service.MailBuilder.validMail;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -39,26 +41,22 @@ public class MailControllerTest {
 
     @Test
     public void sendSuccess() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "aki@gmail.com")
-                .param("subject", "is a subject")
-                .param("body", "is a body"))
+        MailInfo mailInfo = validMail().build();
+
+        getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
-        verify(mailService).send(argThat(mail -> mail.getSubject().equals("is a subject")));
-        verify(mailService).send(argThat(mail -> mail.getFrom().equals("gadget.mailsender@gmail.com")));
-        verify(mailService).send(argThat(mail -> mail.getTo().equals("aki@gmail.com")));
-        verify(mailService).send(argThat(mail -> mail.getBody().equals("is a body")));
+        verify(mailService).send(argThat(mail -> mail.getSubject().equals(mailInfo.getSubject())));
+        verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
+        verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
+        verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
     }
 
     @Test
     public void showErrorIfEmptyMailAddress() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "")
-                .param("subject", "is a subject")
-                .param("body", "is a body"))
+        MailInfo mailInfo = validMail().withTo("").build();
+
+        getPerform(mailInfo)
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
@@ -67,11 +65,10 @@ public class MailControllerTest {
 
     @Test
     public void showErrorIfEmptySubject() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "aki@gmail.com")
-                .param("subject", "")
-                .param("body", "is a body"))
+
+        MailInfo mailInfo = validMail().withSubject("").build();
+
+        getPerform(mailInfo)
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
@@ -80,11 +77,10 @@ public class MailControllerTest {
 
     @Test
     public void showErrorIfEmptyBody() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "aki@gmail.com")
-                .param("subject", "is a subject")
-                .param("body", ""))
+
+        MailInfo mailInfo = validMail().withBody("").build();
+
+        getPerform(mailInfo)
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
@@ -93,11 +89,10 @@ public class MailControllerTest {
 
     @Test
     public void manyAddress() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "abcdefghi123@xxx.com;stanly@xxx.com")
-                .param("subject", "is a subject")
-                .param("body", "hello. this is body"))
+
+        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com;stanly@xxx.com").build();
+
+        getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
         verify(mailService, times(2)).send(any());
@@ -105,11 +100,10 @@ public class MailControllerTest {
 
     @Test
     public void manyAddressWithSpace() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "abcdefghi123@xxx.com ; stanly@xxx.com")
-                .param("subject", "is a subject")
-                .param("body", "hello. this is body"))
+
+        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com ; stanly@xxx.com").build();
+
+        getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
         verify(mailService, times(2)).send(any());
@@ -117,12 +111,12 @@ public class MailControllerTest {
 
     @Test
     public void manyAddressWithInvalidAddress() throws Exception {
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "abcdefghi123@xxx.com ; xxx.com; stanly@xxx.com")
-                .param("subject", "is a subject")
-                .param("body", "hello. this is body"))
+
+        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com ; xxx.com; stanly@xxx.com").build();
+
+        getPerform(mailInfo)
                 .andExpect(view().name("send"));
+
 
         verify(mailService, never()).send(any());
     }
@@ -130,20 +124,27 @@ public class MailControllerTest {
     @Test
     public void replaceSubject() throws Exception {
         AddressBook addressBook = new AddressBook();
-        AddressItem addressItem = new AddressItem("aki@gmail.com", "Aki");
+        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
         addressBook.add(addressItem);
         addressBook.save();
 
-        mvc.perform(post("/send")
-                .param("from", "gadget.mailsender@gmail.com")
-                .param("address", "aki@gmail.com")
-                .param("subject", "Hello $name")
-                .param("body", "hello. this is body"))
+        MailInfo mailInfo = validMail().withSubject("Hello $name").build();
+
+        getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
         verify(mailService).send(argThat(mail -> mail.getSubject().equals("Hello Aki")));
-        verify(mailService).send(argThat(mail -> mail.getFrom().equals("gadget.mailsender@gmail.com")));
-        verify(mailService).send(argThat(mail -> mail.getTo().equals("aki@gmail.com")));
-        verify(mailService).send(argThat(mail -> mail.getBody().equals("hello. this is body")));
+        verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
+        verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
+        verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
     }
+
+    private ResultActions getPerform(MailInfo mailInfo) throws Exception {
+        return mvc.perform(post("/send")
+                .param("from", mailInfo.getFrom())
+                .param("address", mailInfo.getTo())
+                .param("subject", mailInfo.getSubject())
+                .param("body", mailInfo.getBody()));
+    }
+
 }

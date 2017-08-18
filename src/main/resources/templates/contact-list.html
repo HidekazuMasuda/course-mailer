@@ -20,7 +20,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Error</h3>
                 </div>
-                <div class="panel-body" id="error-area">
+                <div class="panel-body" id="error-area" th:text="${errorMessage}">
                 </div>
             </div>
             <form action="/contact-list" method="post">
