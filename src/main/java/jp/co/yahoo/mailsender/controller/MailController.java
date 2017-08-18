@@ -3,7 +3,6 @@ package jp.co.yahoo.mailsender.controller;
 import jp.co.yahoo.mailsender.data.AddressItem;
 import jp.co.yahoo.mailsender.form.MailSendForm;
 import jp.co.yahoo.mailsender.service.AddressBookService;
-import jp.co.yahoo.mailsender.service.AddressBookServiceImpl;
 import jp.co.yahoo.mailsender.service.MailInfo;
 import jp.co.yahoo.mailsender.service.MailService;
 import jp.co.yahoo.mailsender.utils.Validator;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -53,30 +54,32 @@ public class MailController {
         }
 
         try {
-            sendMultiple(addresses, form.getSubject(), form.getBody());
+
+
+            List<MailInfo> mailInfoList = new ArrayList<>();
+
+            String subject = form.getSubject();
+            for (String address : addresses) {
+                AddressItem addressItem = addressBookService.findByAddress(address);
+
+                if (addressItem != null) {
+                    if (StringUtils.isEmpty(addressItem.getName()) && StringUtils.contains(subject, "$name")) {
+                        throw new Exception("name attribute is empty!!");
+                    }
+                    subject = StringUtils.replace(subject, "$name", addressItem.getName());
+                }
+
+                MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, form.getBody());
+                mailInfoList.add(mail);
+            }
+
+            mailService.sendMultiple(mailInfoList);
         } catch (Exception e) {
             model.addAttribute("errorMessage", "error");
             return "send";
         }
 
         return "send";
-    }
-
-    private void sendMultiple(String[] addresses, String subject, String body) throws Exception {
-        for (String address : addresses) {
-
-            AddressItem addressItem = addressBookService.findByAddress(address);
-
-            if (addressItem != null) {
-                if (StringUtils.isEmpty(addressItem.getName())) {
-                    throw new Exception("name attribute is empty!!");
-                }
-                subject = StringUtils.replace(subject, "$name", addressItem.getName());
-            }
-
-            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, body);
-            mailService.send(mail);
-        }
     }
 
 }

@@ -14,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
+
 import static jp.co.yahoo.mailsender.service.MailBuilder.validMail;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,16 +42,14 @@ public class MailControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void sendSuccess() throws Exception {
-        MailInfo mailInfo = validMail().build();
+    public void sendToMultipleAddresses() throws Exception {
+        String addresses = "abc@gmail.com;john@gmail.com";
+        MailInfo mailInfo = validMail().withTo(addresses).build();
 
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
+        getPerform(mailInfo).andExpect(view().name("send"));
 
-        verify(mailService).send(argThat(mail -> mail.getSubject().equals(mailInfo.getSubject())));
-        verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
-        verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
-        verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
+        verify(mailService).sendMultiple(
+                argThat(mainInfoList -> mainInfoList.get(0).getFrom().equals(mailInfo.getFrom())));
     }
 
     @Test
@@ -88,28 +88,6 @@ public class MailControllerTest {
     }
 
     @Test
-    public void manyAddress() throws Exception {
-
-        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com;stanly@xxx.com").build();
-
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService, times(2)).send(any());
-    }
-
-    @Test
-    public void manyAddressWithSpace() throws Exception {
-
-        MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com ; stanly@xxx.com").build();
-
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService, times(2)).send(any());
-    }
-
-    @Test
     public void manyAddressWithInvalidAddress() throws Exception {
 
         MailInfo mailInfo = validMail().withTo("abcdefghi123@xxx.com ; xxx.com; stanly@xxx.com").build();
@@ -122,7 +100,7 @@ public class MailControllerTest {
     }
 
     @Test
-    public void replaceSubject() throws Exception {
+    public void replaceSubjectSuccess() throws Exception {
         AddressBook addressBook = new AddressBook();
         AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
         addressBook.add(addressItem);
@@ -133,10 +111,11 @@ public class MailControllerTest {
         getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
-        verify(mailService).send(argThat(mail -> mail.getSubject().equals("Hello Aki")));
-        verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
-        verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
-        verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
+        verify(mailService).sendMultiple(
+                argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
+        //verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
+        //verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
+        //verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
     }
 
     private ResultActions getPerform(MailInfo mailInfo) throws Exception {

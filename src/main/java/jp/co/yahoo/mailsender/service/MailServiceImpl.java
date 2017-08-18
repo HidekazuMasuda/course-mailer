@@ -4,6 +4,8 @@ import org.apache.commons.mail.SimpleEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MailServiceImpl implements MailService {
 
@@ -39,6 +41,12 @@ public class MailServiceImpl implements MailService {
         simpleEmail.setMsg(mailInfo.getBody());
         simpleEmail.addTo(mailInfo.getTo());
         simpleEmail.send();
+    }
+
+    public void sendMultiple(List<MailInfo> mailInfoList) throws Exception {
+        for (MailInfo mailInfo : mailInfoList) {
+            send(mailInfo);
+        }
     }
 
 }
