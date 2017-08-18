@@ -1,4 +1,4 @@
-Feature: Refund item
+Feature: Edit Attributes
 
 @developing
 Scenario Outline: save attribute success.

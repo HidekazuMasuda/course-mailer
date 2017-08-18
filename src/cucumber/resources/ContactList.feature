@@ -1,4 +1,4 @@
-Feature: Refund item
+Feature: Contact List
 
 # address format error case
 @developing
@@ -15,10 +15,20 @@ Scenario: add a duplicate address
   When add
   Then ContactList error_area is "error"
 
+# name only error case
+@developing
+Scenario: add a name only
+  Given ContactList address is ""
+  And ContactList name is "xxx"
+  When add
+  Then ContactList error_area is "error"
+
 # success case
 Scenario: add a address
   Given ContactList address is "xxx@gmail.com"
+  And ContactList name is "xxx"
   And ContactList is empty
   When add
-  Then error_area is none
+  Then ContactList error_area is ""
   And ContactList address is added "xxx@gmail.com"
+  And ContactList name is added "xxx"
