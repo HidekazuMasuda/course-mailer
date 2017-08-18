@@ -1,5 +1,30 @@
 Feature: Mail Send
 
+
+# success case
+Scenario: send mail success one
+  Given address is "xxx@gmail.com"
+  And subject is "hello"
+  And body is "message"
+  When send
+  Then error_area is none
+  And should receive the following emails:
+    | from                        | to            | subject       | body      |
+    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
+
+
+Scenario: send mail success two
+  Given address is "xxx@gmail.com;yyy@gmail.com"
+  And subject is "hello"
+  And body is "message"
+  When send
+  Then error_area is none
+  And should receive the following emails:
+    | from                        | to            | subject       | body      |
+    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
+    | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |
+
+
 # 1 field error
 Scenario: address is empty
   Given address is ""
@@ -86,26 +111,3 @@ Scenario: address format error: start with @
   When send
   Then error_area is "error"
 
-
-# success case
-Scenario: send mail success one
-  Given address is "xxx@gmail.com"
-  And subject is "hello"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-    | from                        | to            | subject       | body      |
-    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
-
-
-Scenario: send mail success two
-  Given address is "xxx@gmail.com;yyy@gmail.com"
-  And subject is "hello"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-    | from                        | to            | subject       | body      |
-    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
-    | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |
