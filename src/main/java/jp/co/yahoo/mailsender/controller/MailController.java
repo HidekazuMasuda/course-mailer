@@ -61,15 +61,15 @@ public class MailController {
             String subject = form.getSubject();
             for (String address : addresses) {
                 AddressItem addressItem = addressBookService.findByAddress(address);
-
+                String replacedSubject = subject;
                 if (addressItem != null) {
                     if (StringUtils.isEmpty(addressItem.getName()) && StringUtils.contains(subject, "$name")) {
                         throw new Exception("name attribute is empty!!");
                     }
-                    subject = StringUtils.replace(subject, "$name", addressItem.getName());
+                    replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
                 }
 
-                MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, form.getBody());
+                MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, form.getBody());
                 mailInfoList.add(mail);
             }
 

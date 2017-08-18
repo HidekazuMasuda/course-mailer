@@ -48,7 +48,7 @@ public class MailControllerTest {
 
         getPerform(mailInfo).andExpect(view().name("send"));
 
-        verify(mailService, times(1)).sendMultiple(any());
+        verify(mailService, times(1 )).sendMultiple(any());
     }
 
     @Test
@@ -112,6 +112,26 @@ public class MailControllerTest {
 
         verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
     }
+
+    @Test
+    public void sendMultipleWithSubjectReplaced() throws Exception {
+        AddressBook addressBook = new AddressBook();
+        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
+        addressBook.add(addressItem);
+        addressItem = new AddressItem("stanly@xxx.com", "Stanly");
+        addressBook.add(addressItem);
+        addressBook.save();
+
+        MailInfo mailInfo = validMail().withSubject("Hello $name").withTo("gadget.mailsender@gmail.com;stanly@xxx.com").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
+        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(1).getSubject().equals("Hello Stanly")));
+    }
+
+    
 
     private ResultActions getPerform(MailInfo mailInfo) throws Exception {
         return mvc.perform(post("/send")
