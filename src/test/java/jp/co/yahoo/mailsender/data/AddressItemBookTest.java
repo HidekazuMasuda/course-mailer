@@ -59,4 +59,11 @@ public class AddressItemBookTest {
         addressBook.add(addressItem);
         addressBook.add(addressItem);
     }
+
+    @Test
+    public void findByAddress() throws Exception {
+        AddressItem actual = addressBook.findByAddress("stanly@odd-e.com");
+        assertThat(actual.getName(), is(addressItem.getName()));
+        assertThat(actual.getMailAddress(), is(addressItem.getMailAddress()));
+    }
 }

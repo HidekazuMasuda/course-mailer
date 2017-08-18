@@ -1,4 +1,4 @@
-Feature: Refund item
+Feature: Mail Send
 
 # 1 field error
 Scenario: address is empty

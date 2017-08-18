@@ -57,6 +57,16 @@ public class AddressBook {
         return true;
     }
 
+    public AddressItem findByAddress(String address) throws Exception {
+        load();
+        for (AddressItem addressItem : addressItems) {
+            if (addressItem.getMailAddress().equals(address)) {
+                return addressItem;
+            }
+        }
+        return null;
+    }
+
     private BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
     }
