@@ -48,8 +48,7 @@ public class MailControllerTest {
 
         getPerform(mailInfo).andExpect(view().name("send"));
 
-        verify(mailService).sendMultiple(
-                argThat(mainInfoList -> mainInfoList.get(0).getFrom().equals(mailInfo.getFrom())));
+        verify(mailService, times(1)).sendMultiple(any());
     }
 
     @Test
@@ -60,7 +59,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).sendMultiple(any(),any(),anyString());
+        verify(mailService, never()).sendMultiple(any());
     }
 
     @Test
@@ -72,7 +71,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).sendMultiple(any(),any(),anyString());
+        verify(mailService, never()).sendMultiple(any());
     }
 
     @Test
@@ -84,7 +83,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).sendMultiple(any(),any(),anyString());
+        verify(mailService, never()).sendMultiple(any());
     }
 
     @Test
@@ -96,7 +95,7 @@ public class MailControllerTest {
                 .andExpect(view().name("send"));
 
 
-        verify(mailService, never()).sendMultiple(any(),any(),anyString());
+        verify(mailService, never()).sendMultiple(any());
     }
 
     @Test
@@ -111,11 +110,7 @@ public class MailControllerTest {
         getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
-        verify(mailService).sendMultiple(
-                argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
-        //verify(mailService).send(argThat(mail -> mail.getFrom().equals(mailInfo.getFrom())));
-        //verify(mailService).send(argThat(mail -> mail.getTo().equals(mailInfo.getTo())));
-        //verify(mailService).send(argThat(mail -> mail.getBody().equals(mailInfo.getBody())));
+        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
     }
 
     private ResultActions getPerform(MailInfo mailInfo) throws Exception {

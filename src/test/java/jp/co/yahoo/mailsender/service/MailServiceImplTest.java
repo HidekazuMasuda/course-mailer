@@ -1,5 +1,6 @@
 package jp.co.yahoo.mailsender.service;
 
+import jp.co.yahoo.mailsender.data.AddressItem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -41,20 +43,25 @@ public class MailServiceImplTest {
 
     @Test
     public void sendMultiple() throws Exception {
-        service.sendMultiple(new String[]{"first@gmail.com", "second@gmail.com"}, "a subject", "a body");
+
+
+        List<MailInfo> mailInfoList = new ArrayList<>();
+        mailInfoList.add(validMail().withTo("first@gmail.com").build());
+        mailInfoList.add(validMail().withTo("second@gmail.com").build());
+        service.sendMultiple(mailInfoList);
 
         List<WiserMessage> messages = wiser.getMessages();
         assertThat(messages.size(), is(2));
 
-        assertThat(messages.get(0).getEnvelopeReceiver(), is("first@gmail.com"));
-        assertThat(messages.get(0).getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
-        assertThat(messages.get(0).getMimeMessage().getSubject(), is("a subject"));
-        assertThat(messages.get(0).getMimeMessage().getContent().toString().trim(), is("a body"));
+        assertThat(messages.get(0).getEnvelopeReceiver(), is(mailInfoList.get(0).getTo()));
+        assertThat(messages.get(0).getEnvelopeSender(), is(mailInfoList.get(0).getFrom()));
+        assertThat(messages.get(0).getMimeMessage().getSubject(), is(mailInfoList.get(0).getSubject()));
+        assertThat(messages.get(0).getMimeMessage().getContent().toString().trim(), is(mailInfoList.get(0).getBody()));
 
-        assertThat(messages.get(1).getEnvelopeReceiver(), is("second@gmail.com"));
-        assertThat(messages.get(1).getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
-        assertThat(messages.get(1).getMimeMessage().getSubject(), is("a subject"));
-        assertThat(messages.get(1).getMimeMessage().getContent().toString().trim(), is("a body"));
+        assertThat(messages.get(1).getEnvelopeReceiver(), is(mailInfoList.get(1).getTo()));
+        assertThat(messages.get(1).getEnvelopeSender(), is(mailInfoList.get(1).getFrom()));
+        assertThat(messages.get(1).getMimeMessage().getSubject(), is(mailInfoList.get(1).getSubject()));
+        assertThat(messages.get(1).getMimeMessage().getContent().toString().trim(), is(mailInfoList.get(1).getBody()));
     }
 
 }
