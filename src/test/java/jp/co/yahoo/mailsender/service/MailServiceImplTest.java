@@ -12,6 +12,7 @@ import org.subethamail.wiser.WiserMessage;
 
 import static jp.co.yahoo.mailsender.service.MailBuilder.validMail;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -39,16 +40,21 @@ public class MailServiceImplTest {
     }
 
     @Test
-    public void mailSendSuccess() throws Exception {
-        service.send(validMail().build());
+    public void sendMultiple() throws Exception {
+        service.sendMultiple(new String[]{"first@gmail.com", "second@gmail.com"}, "a subject", "a body");
 
-        // wiserが受信したデータをログ出力
         List<WiserMessage> messages = wiser.getMessages();
+        assertThat(messages.size(), is(2));
 
-        assertThat(messages.size(), is(1));
+        assertThat(messages.get(0).getEnvelopeReceiver(), is("first@gmail.com"));
+        assertThat(messages.get(0).getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
+        assertThat(messages.get(0).getMimeMessage().getSubject(), is("a subject"));
+        assertThat(messages.get(0).getMimeMessage().getContent().toString().trim(), is("a body"));
 
-        WiserMessage wiserMessage = messages.get(0);
-        assertThat(wiserMessage.getEnvelopeReceiver(), is("gadget.mailsender@gmail.com"));
-        assertThat(wiserMessage.getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
+        assertThat(messages.get(1).getEnvelopeReceiver(), is("second@gmail.com"));
+        assertThat(messages.get(1).getEnvelopeSender(), is("gadget.mailsender@gmail.com"));
+        assertThat(messages.get(1).getMimeMessage().getSubject(), is("a subject"));
+        assertThat(messages.get(1).getMimeMessage().getContent().toString().trim(), is("a body"));
     }
+
 }

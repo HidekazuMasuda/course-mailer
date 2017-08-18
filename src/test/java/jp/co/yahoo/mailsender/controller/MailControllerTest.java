@@ -60,7 +60,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class MailControllerTest {
                 .andExpect(model().attribute("errorMessage", "error"))
                 .andExpect(view().name("send"));
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class MailControllerTest {
                 .andExpect(view().name("send"));
 
 
-        verify(mailService, never()).send(any());
+        verify(mailService, never()).sendMultiple(any(),any(),anyString());
     }
 
     @Test

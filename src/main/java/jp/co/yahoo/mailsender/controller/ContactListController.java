@@ -32,7 +32,7 @@ public class ContactListController {
     @PostMapping("/contact-list")
     public String addContactList(@ModelAttribute ContactListForm form, Model model) {
 
-        AddressItem input = new AddressItem(form.getAddress());
+        AddressItem input = new AddressItem(form.getAddress(), form.getName());
         try {
             addressBookService.add(input);
 
