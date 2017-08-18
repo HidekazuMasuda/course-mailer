@@ -43,7 +43,7 @@
             <br/>
             <label>Address List</label>
             <br/>
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="address-list">
                 <tr th:each="mail : ${contactList}">
                     <td th:text="${mail.name}"></td>
                     <td><a href="#" th:text="${mail.mailAddress}"></a></td>
