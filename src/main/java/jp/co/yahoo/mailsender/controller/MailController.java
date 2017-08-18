@@ -1,7 +1,6 @@
 package jp.co.yahoo.mailsender.controller;
 
 import jp.co.yahoo.mailsender.form.MailSendForm;
-import jp.co.yahoo.mailsender.service.MailInfo;
 import jp.co.yahoo.mailsender.service.MailService;
 import jp.co.yahoo.mailsender.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,20 +45,13 @@ public class MailController {
         }
 
         try {
-            sendMultiple(addresses, form.getSubject(), form.getBody());
+            mailService.sendMultiple(addresses, form.getSubject(), form.getBody());
         } catch (Exception e) {
             model.addAttribute("errorMessage", "error");
             return "send";
         }
 
         return "send";
-    }
-
-    private void sendMultiple(String[] addresses, String subject, String body) throws Exception {
-        for (String address : addresses) {
-            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, body);
-            mailService.send(mail);
-        }
     }
 
 }
