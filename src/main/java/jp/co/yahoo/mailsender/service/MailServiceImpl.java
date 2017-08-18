@@ -41,4 +41,11 @@ public class MailServiceImpl implements MailService {
         simpleEmail.send();
     }
 
+    public void sendMultiple(String[] addresses, String subject, String body) throws Exception {
+        for (String address : addresses) {
+            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, subject, body);
+            send(mail);
+        }
+    }
+
 }
