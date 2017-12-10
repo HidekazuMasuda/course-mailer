@@ -6,6 +6,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import jp.co.yahoo.mailsender.MailsenderApplication;
+import jp.co.yahoo.mailsender.data.AddressBook;
 import jp.co.yahoo.mailsender.data.AddressItem;
 import jp.co.yahoo.mailsender.service.AddressBookService;
 import jp.co.yahoo.mailsender.service.MailInfo;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -36,35 +38,45 @@ public class MailSendSteps {
     @LocalServerPort
     private int port;
 
-    private WebDriver driver;
+    private static WebDriver driver;
     private Wiser wiser;
 
     @Autowired
     AddressBookService addressBookService;
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                if(driver != null)
+                    driver.quit();
+            }
+        });
+    }
 
     @Before
     public void setup() throws Exception {
         if (driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
-            driver.get("http://localhost:" + port + "/send");
         }
+
+        driver.get("http://localhost:" + port + "/send");
         wiser = new Wiser();
         wiser.setPort(2500);
         wiser.setHostname("localhost");
         wiser.start();
 
+        File file = new File(AddressBook.FILE_PATH);
+        boolean isDelete = file.delete();
 
         addressBookService.add(new AddressItem("user1@gmail.com", "user1"));
         addressBookService.add(new AddressItem("user2@gmail.com", "user2"));
         addressBookService.add(new AddressItem("noname@gmail.com", ""));
-
-
     }
 
     @After
     public void shutDown() {
-        driver.quit();
         wiser.stop();
     }
 

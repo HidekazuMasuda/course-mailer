@@ -33,7 +33,17 @@ public class ContactListSteps {
     @LocalServerPort
     private int port;
 
-    private WebDriver driver;
+    private static WebDriver driver;
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                if(driver != null)
+                    driver.quit();
+            }
+        });
+    }
 
     @Before
     public void setup() {
@@ -46,11 +56,6 @@ public class ContactListSteps {
         File file = new File(AddressBook.FILE_PATH);
         boolean isDelete = file.delete();
         System.out.println("file delete result is " + isDelete);
-    }
-
-    @After
-    public void shutDown() {
-        driver.quit();
     }
 
     @Given("^ContactList address is \"([^\"]*)\"$")
