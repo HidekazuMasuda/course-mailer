@@ -1,15 +1,14 @@
-import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import jp.co.yahoo.mailsender.MailsenderApplication;
-import jp.co.yahoo.mailsender.data.AddressBook;
-import jp.co.yahoo.mailsender.data.AddressItem;
-import jp.co.yahoo.mailsender.service.AddressBookService;
-import jp.co.yahoo.mailsender.service.MailInfo;
+import com.odde.mailsender.MailsenderApplication;
+import com.odde.mailsender.data.AddressBook;
+import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.service.AddressBookService;
+import com.odde.mailsender.service.MailInfo;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -24,7 +23,6 @@ import org.subethamail.wiser.WiserMessage;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
