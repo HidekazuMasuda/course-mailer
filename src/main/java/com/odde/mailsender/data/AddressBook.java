@@ -9,7 +9,7 @@ import java.util.List;
 public class AddressBook {
 
     private List<AddressItem> addressItems = new ArrayList<AddressItem>();
-    public static final String FILE_PATH = System.getenv("HOME") + "/gadget-mailsender/addressbook.json";
+    public static final String FILE_PATH = System.getenv("HOME") + "/course-mailer/addressbook.json";
 
     public void load() throws Exception {
         if (!addressItems.isEmpty()) {
