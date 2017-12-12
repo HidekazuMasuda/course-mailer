@@ -43,13 +43,21 @@
             <br/>
             <label>Address List</label>
             <br/>
-            <table class="table table-bordered" id="address-list">
-                <tr th:each="mail : ${contactList}">
-                    <td th:text="${mail.name}"></td>
-                    <td><a href="#" th:text="${mail.mailAddress}"></a></td>
-                    <td><input type="checkbox" th:id="${mail.mailAddress}" /></td>
-                </tr>
-            </table>
+            <form action="/create-mail" method="post">
+                <button type="submit" id="create-email" class="btn btn-default">Create Email</button>
+                <table class="table table-bordered" id="address-list">
+                    <tr>
+                        <th>name</th>
+                        <th>address</th>
+                        <th><input type="checkbox" id="all" />&nbsp;Check All</th>
+                    </tr>
+                    <tr th:each="mail : ${contactList}">
+                        <td th:text="${mail.name}"></td>
+                        <td><a href="#" th:text="${mail.mailAddress}"></a></td>
+                        <td><input type="checkbox" th:id="${mail.mailAddress}" /></td>
+                    </tr>
+                </table>
+            </form>
         </div>
         <div class="col-md-3"></div>
     </div>
