@@ -47,6 +47,7 @@
                 <tr th:each="mail : ${contactList}">
                     <td th:text="${mail.name}"></td>
                     <td><a href="#" th:text="${mail.mailAddress}"></a></td>
+                    <td><input type="checkbox" th:id="${mail.mailAddress}" /></td>
                 </tr>
             </table>
         </div>
