@@ -147,7 +147,6 @@ Scenario: replace subject success two person but no name attribute
 
 ### replace body placeholder
 ## success case
-@developing
 Scenario: replace body success one person
   Given body is "Hi $name"
   And subject is "Hi"
@@ -158,7 +157,6 @@ Scenario: replace body success one person
       | from                        | to            | subject       | body      |
       | gadget.mailsender@gmail.com | user1@gmail.com | Hi    | Hi user1   |
 
-@developing
 Scenario: replace body success two person
   Given subject is "Hi"
   And address is "user1@gmail.com;user2@gmail.com"
@@ -170,7 +168,6 @@ Scenario: replace body success two person
       | gadget.mailsender@gmail.com | user1@gmail.com | Hi    | Hi user1   |
       | gadget.mailsender@gmail.com | user2@gmail.com | Hi    | Hi user2   |
 
-@developing
 Scenario: replace body success two person but no name attribute
   Given subject is "Hi consumers"
   And address is "user1@gmail.com;noname@gmail.com"
@@ -183,7 +180,6 @@ Scenario: replace body success two person but no name attribute
       | gadget.mailsender@gmail.com | noname@gmail.com | Hi consumers    | message   |
 
 ## error case
-@developing
 Scenario Outline: error case
   Given subject is "<subject>"
   And address is "<addresses>"
