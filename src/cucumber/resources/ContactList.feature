@@ -45,4 +45,23 @@ Scenario: add a name only
   When add
   Then ContactList error_area is "error"
 
+# check no address
+@developing
+Scenario: check no address
+  Given No ContactList is checked.
+  When createEmail
+  Then MailSender address is ""
 
+# check only address
+@developing
+Scenario: check only address
+  Given checked ContactList is "xxx1@gmail.com"
+  When createEmail
+  Then MailSender address is "xxx1@gmail.com"
+
+# check all address
+@developing
+Scenario: check all address
+  Given checked all ContactList
+  When createEmail
+  Then MailSender address is "xxx1@gmail.com;xxx2@gmail.com"
