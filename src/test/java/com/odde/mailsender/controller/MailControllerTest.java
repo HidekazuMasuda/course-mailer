@@ -144,8 +144,18 @@ public class MailControllerTest {
     }
 
     @Test
-    public void notReplaceWhenNotRegisteredAddress() throws Exception {
+    public void notSubjectReplaceWhenNotRegisteredAddress() throws Exception {
         MailInfo mailInfo = MailBuilder.validMail().withSubject("Hello $name").withTo("foobar@xxx.com").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).sendMultiple(any());
+    }
+
+    @Test
+    public void notBodyReplaceWhenNotRegisteredAddress() throws Exception {
+        MailInfo mailInfo = MailBuilder.validMail().withBody("Hi $name").withTo("foobar@xxx.com").build();
 
         getPerform(mailInfo)
                 .andExpect(view().name("send"));
