@@ -6,6 +6,7 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 import com.odde.mailsender.MailsenderApplication;
 import com.odde.mailsender.data.AddressBook;
 import com.odde.mailsender.data.AddressItem;
+import org.junit.After;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -45,7 +46,10 @@ public class ContactListSteps {
             driver = new ChromeDriver();
             driver.get("http://localhost:" + port + "/contact-list");
         }
+    }
 
+    @After
+    public void tearDown() {
         File file = new File(AddressBook.FILE_PATH);
         boolean isDelete = file.delete();
         System.out.println("file delete result is " + isDelete);
