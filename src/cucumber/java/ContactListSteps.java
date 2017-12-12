@@ -1,3 +1,5 @@
+import com.odde.mailsender.service.AddressBookService;
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -11,6 +13,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,13 +42,23 @@ public class ContactListSteps {
         });
     }
 
+    @Autowired
+    AddressBookService addressBookService;
+
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         if(driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
-            driver.get("http://localhost:" + port + "/contact-list");
         }
+        driver.get("http://localhost:" + port + "/contact-list");
+
+        File file = new File(AddressBook.FILE_PATH);
+        boolean isDelete = file.delete();
+
+        addressBookService.add(new AddressItem("user1@gmail.com", "user1"));
+        addressBookService.add(new AddressItem("user2@gmail.com", "user2"));
+        addressBookService.add(new AddressItem("noname@gmail.com", ""));
     }
 
     @After
@@ -99,5 +112,31 @@ public class ContactListSteps {
     public void contact_list_name_has(String name) throws Throwable {
         String html = driver.findElement(By.id("address-list")).getText();
         Assert.assertThat(html.contains(name), is(true));
+    }
+
+    @When("^create email$")
+    public void create_email() throws Throwable {
+        driver.findElement(By.id("create-email")).click();    }
+
+    @Then("^MailSender address is \"([^\"]*)\"$")
+    public void mail_sender_address_is(String address) throws Throwable {
+        String html = driver.findElement(By.id("address")).getText();
+        Assert.assertEquals(address, html);
+    }
+
+    @Given("^No ContactList is checked$")
+    public void no_contact_list_is_checked() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @Given("^checked ContactList is \"([^\"]*)\"$")
+    public void checked_contact_list_is(String address) throws Throwable {
+        driver.findElement(By.id(address)).click();
+    }
+
+    @Given("^checked all ContactList$")
+    public void checked_all_contact_list() throws Throwable {
+        driver.findElement(By.id("all")).click();
     }
 }

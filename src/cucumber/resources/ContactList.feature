@@ -48,20 +48,20 @@ Scenario: add a name only
 # check no address
 @developing
 Scenario: check no address
-  Given No ContactList is checked.
-  When createEmail
+  Given No ContactList is checked
+  When create email
   Then MailSender address is ""
 
 # check only address
 @developing
 Scenario: check only address
-  Given checked ContactList is "xxx1@gmail.com"
-  When createEmail
-  Then MailSender address is "xxx1@gmail.com"
+  Given checked ContactList is "user1@gmail.com"
+  When create email
+  Then MailSender address is "user1@gmail.com"
 
 # check all address
 @developing
 Scenario: check all address
   Given checked all ContactList
-  When createEmail
-  Then MailSender address is "xxx1@gmail.com;xxx2@gmail.com"
+  When create email
+  Then MailSender address is "user1@gmail.com;user2@gmail.com;noname@gmail.com"
