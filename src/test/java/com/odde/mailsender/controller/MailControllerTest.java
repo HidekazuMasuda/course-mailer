@@ -154,6 +154,36 @@ public class MailControllerTest {
     }
 
     @Test
+    public void notSubjectReplaceWhenNoNameAddress() throws Exception {
+        AddressBook addressBook = new AddressBook();
+        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "");
+        addressBook.add(addressItem);
+        addressBook.save();
+
+        MailInfo mailInfo = MailBuilder.validMail().withSubject("Hi $name").withTo("gadget.mailsender@gmail.com").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).sendMultiple(any());
+    }
+
+    @Test
+    public void notBodyReplaceWhenNoNameAddress() throws Exception {
+        AddressBook addressBook = new AddressBook();
+        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "");
+        addressBook.add(addressItem);
+        addressBook.save();
+
+        MailInfo mailInfo = MailBuilder.validMail().withBody("Hi $name").withTo("gadget.mailsender@gmail.com").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).sendMultiple(any());
+    }
+
+    @Test
     public void notBodyReplaceWhenNotRegisteredAddress() throws Exception {
         MailInfo mailInfo = MailBuilder.validMail().withBody("Hi $name").withTo("foobar@xxx.com").build();
 
