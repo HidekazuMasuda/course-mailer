@@ -70,7 +70,7 @@ public class MailController {
                     replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
                     replacedBody = StringUtils.replace(body, "$name", addressItem.getName());
                 }else {
-                    if (StringUtils.contains(subject, "$name")){
+                    if (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name")){
                         throw new Exception("email address is not registered");
                     }
                 }
