@@ -111,6 +111,21 @@ public class MailControllerTest {
     }
 
     @Test
+    public void replaceBodySuccess() throws Exception {
+        AddressBook addressBook = new AddressBook();
+        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
+        addressBook.add(addressItem);
+        addressBook.save();
+
+        MailInfo mailInfo = MailBuilder.validMail().withSubject("Hi").withBody("Hello $name").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getBody().equals("Hello Aki")));
+    }
+
+    @Test
     public void sendMultipleWithSubjectReplaced() throws Exception {
         AddressBook addressBook = new AddressBook();
         AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
