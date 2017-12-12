@@ -64,7 +64,7 @@ public class MailController {
                 String replacedSubject = subject;
                 String replacedBody = body;
                 if (addressItem != null) {
-                    if (StringUtils.isEmpty(addressItem.getName()) && (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name"))) {
+                    if (isEmptyNameAttribute(subject, body, addressItem)) {
                         throw new Exception("name attribute is empty!!");
                     }
                     replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
@@ -86,6 +86,10 @@ public class MailController {
         }
 
         return "send";
+    }
+
+    private boolean isEmptyNameAttribute(String subject, String body, AddressItem addressItem) {
+        return StringUtils.isEmpty(addressItem.getName()) && (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name"));
     }
 
 }
