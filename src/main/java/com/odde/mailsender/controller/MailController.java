@@ -54,25 +54,26 @@ public class MailController {
 
         try {
 
-
             List<MailInfo> mailInfoList = new ArrayList<>();
 
             String subject = form.getSubject();
             String body = form.getBody();
             for (String address : addresses) {
-                AddressItem addressItem = addressBookService.findByAddress(address);
+
                 String replacedSubject = subject;
                 String replacedBody = body;
-                if (addressItem != null) {
-                    if (isEmptyNameAttribute(subject, body, addressItem)) {
-                        throw new Exception("name attribute is empty!!");
-                    }
-                    replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
-                    replacedBody = StringUtils.replace(body, "$name", addressItem.getName());
-                }else {
-                    if (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name")){
+                if (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name")) {
+                    AddressItem addressItem = addressBookService.findByAddress(address);
+
+                    if (addressItem == null) {
                         throw new Exception("email address is not registered");
                     }
+                    if (StringUtils.isEmpty(addressItem.getName())) {
+                        throw new Exception("name attribute is empty!!");
+                    }
+
+                    replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
+                    replacedBody = StringUtils.replace(body, "$name", addressItem.getName());
                 }
 
                 MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, replacedBody);
@@ -87,9 +88,4 @@ public class MailController {
 
         return "send";
     }
-
-    private boolean isEmptyNameAttribute(String subject, String body, AddressItem addressItem) {
-        return StringUtils.isEmpty(addressItem.getName()) && (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name"));
-    }
-
 }
