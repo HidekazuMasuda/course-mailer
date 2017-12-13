@@ -49,13 +49,13 @@ karma {
     frameworks = ['jasmine'] // <5>
 
     profile('default')  {
-        libraryBases = ['src/main/resources/static/lib']
+        libraryBases = ['src/main/resources/static/lib/']
         libraryFiles = ['jquery-3.2.1.js'] // <1>
 
-        sourceBases = ['src/main/resources/static']
+        sourceBases = ['src/main/resources/static/']
         sourceFiles = ['*.js'] // <2>
 
-        testBases = ['src/test/javascript']
+        testBases = ['src/test/javascript/']
         testFiles = ['**/*test.js'] // <3>
     }
 }
