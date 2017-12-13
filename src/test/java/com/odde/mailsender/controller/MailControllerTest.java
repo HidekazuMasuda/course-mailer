@@ -1,10 +1,12 @@
 package com.odde.mailsender.controller;
 
 import com.odde.mailsender.data.AddressBook;
+import com.odde.mailsender.service.AddressBookService;
 import com.odde.mailsender.service.MailBuilder;
 import com.odde.mailsender.service.MailInfo;
 import com.odde.mailsender.service.MailService;
 import com.odde.mailsender.data.AddressItem;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.io.File;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +41,15 @@ public class MailControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private AddressBookService addressBookService;
+
+    @Before
+    public void setUp() {
+        File file = new File(AddressBook.FILE_PATH);
+        boolean isDelete = file.delete();
+    }
 
     @Test
     public void sendToMultipleAddresses() throws Exception {
@@ -96,51 +109,20 @@ public class MailControllerTest {
     }
 
     @Test
-    public void replaceSubjectSuccess() throws Exception {
-        AddressBook addressBook = new AddressBook();
-        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
-        addressBook.add(addressItem);
-        addressBook.save();
+    public void sendMultipleWithSubjectAndBodyReplaced() throws Exception {
 
-        MailInfo mailInfo = MailBuilder.validMail().withSubject("Hello $name").build();
+        addressBookService.add(new AddressItem("gadget.mailsender@gmail.com", "Aki"));
+        addressBookService.add(new AddressItem("stanly@xxx.com", "Stanly"));
 
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
-    }
-
-    @Test
-    public void replaceBodySuccess() throws Exception {
-        AddressBook addressBook = new AddressBook();
-        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
-        addressBook.add(addressItem);
-        addressBook.save();
-
-        MailInfo mailInfo = MailBuilder.validMail().withSubject("Hi").withBody("Hello $name").build();
-
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getBody().equals("Hello Aki")));
-    }
-
-    @Test
-    public void sendMultipleWithSubjectReplaced() throws Exception {
-        AddressBook addressBook = new AddressBook();
-        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "Aki");
-        addressBook.add(addressItem);
-        addressItem = new AddressItem("stanly@xxx.com", "Stanly");
-        addressBook.add(addressItem);
-        addressBook.save();
-
-        MailInfo mailInfo = MailBuilder.validMail().withSubject("Hello $name").withTo("gadget.mailsender@gmail.com;stanly@xxx.com").build();
+        MailInfo mailInfo = MailBuilder.validMail().withSubject("Hello $name").withBody("Hi $name").withTo("gadget.mailsender@gmail.com;stanly@xxx.com").build();
 
         getPerform(mailInfo)
                 .andExpect(view().name("send"));
 
         verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
         verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(1).getSubject().equals("Hello Stanly")));
+        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getBody().equals("Hi Aki")));
+        verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(1).getBody().equals("Hi Stanly")));
     }
 
     @Test
@@ -154,11 +136,19 @@ public class MailControllerTest {
     }
 
     @Test
+    public void notBodyReplaceWhenNotRegisteredAddress() throws Exception {
+        MailInfo mailInfo = MailBuilder.validMail().withBody("Hi $name").withTo("foobar@xxx.com").build();
+
+        getPerform(mailInfo)
+                .andExpect(view().name("send"));
+
+        verify(mailService, never()).sendMultiple(any());
+    }
+
+    @Test
     public void notSubjectReplaceWhenNoNameAddress() throws Exception {
-        AddressBook addressBook = new AddressBook();
-        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "");
-        addressBook.add(addressItem);
-        addressBook.save();
+
+        addressBookService.add(new AddressItem("gadget.mailsender@gmail.com", ""));
 
         MailInfo mailInfo = MailBuilder.validMail().withSubject("Hi $name").withTo("gadget.mailsender@gmail.com").build();
 
@@ -170,22 +160,10 @@ public class MailControllerTest {
 
     @Test
     public void notBodyReplaceWhenNoNameAddress() throws Exception {
-        AddressBook addressBook = new AddressBook();
-        AddressItem addressItem = new AddressItem("gadget.mailsender@gmail.com", "");
-        addressBook.add(addressItem);
-        addressBook.save();
+
+        addressBookService.add(new AddressItem("gadget.mailsender@gmail.com", ""));
 
         MailInfo mailInfo = MailBuilder.validMail().withBody("Hi $name").withTo("gadget.mailsender@gmail.com").build();
-
-        getPerform(mailInfo)
-                .andExpect(view().name("send"));
-
-        verify(mailService, never()).sendMultiple(any());
-    }
-
-    @Test
-    public void notBodyReplaceWhenNotRegisteredAddress() throws Exception {
-        MailInfo mailInfo = MailBuilder.validMail().withBody("Hi $name").withTo("foobar@xxx.com").build();
 
         getPerform(mailInfo)
                 .andExpect(view().name("send"));
