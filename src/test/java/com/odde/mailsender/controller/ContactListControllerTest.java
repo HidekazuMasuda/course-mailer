@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,5 +56,28 @@ public class ContactListControllerTest {
         verify(addressBookService).add(argThat(mail -> mail.getMailAddress().equals("aaa@yahoo.co.jp")));
         verify(addressBookService).add(argThat(mail -> mail.getName().equals("aaa")));
     }
+
+    @Test
+    public void createMailEmpty() throws Exception {
+        mvc.perform(post("/create-mail"))
+                .andExpect(view().name("send"))
+                .andExpect(MockMvcResultMatchers.model().attribute("address",""));
+    }
+
+    @Test
+    public void createMailOne() throws Exception {
+        mvc.perform(post("/create-mail").param("mailAddress", "aaa@yahoo.co.jp"))
+                .andExpect(view().name("send"))
+                .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp"));
+    }
+
+    @Test
+    public void createMailTwo() throws Exception {
+        mvc.perform(post("/create-mail").param("mailAddress", "aaa@yahoo.co.jp", "bbb@yahoo.co.jp"))
+                .andExpect(view().name("send"))
+                .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp"));
+    }
+
+
 
 }
