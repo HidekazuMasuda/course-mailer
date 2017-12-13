@@ -16,7 +16,6 @@ buildscript {
     }
 }
 
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
@@ -45,12 +44,12 @@ cucumber {
 
 
 karma {
-    basePath = '.' // <1>
+    basePath = '../' // <1>
     colors = true // <2>
 
     browsers = ['PhantomJS'] // <4>
     frameworks = ['jasmine'] // <5>
-    reporters = ['junit'] // <6>
+
     profile('default')  {
         libraryBases = ['**/libs/']
         libraryFiles = ['jquery.js', 'lib1.js'] // <1>
@@ -58,7 +57,7 @@ karma {
         sourceBases = ['src/', 'app/']
         sourceFiles = ['source1.js', '**/*.js'] // <2>
 
-        testBases = ['src/test/javascript/']
+        testBases = ['src/test/javascript']
         testFiles = ['**/*test.js'] // <3>
     }
 }
