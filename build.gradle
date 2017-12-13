@@ -5,10 +5,14 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("com.github.samueltbrown:gradle-cucumber-plugin:0.9")
+        classpath("gradle.plugin.com.craigburke.gradle:karma-gradle:1.4.4")
     }
 }
 
@@ -17,7 +21,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'com.github.samueltbrown.cucumber'
-
+apply plugin: "com.craigburke.karma"
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -38,8 +42,32 @@ cucumber {
     tags = ['~@developing']
 }
 
+
+
+karma {
+    basePath = '.' // <1>
+    colors = true // <2>
+
+    browsers = ['PhantomJS'] // <4>
+    frameworks = ['jasmine'] // <5>
+    reporters = ['junit'] // <6>
+    profile('default')  {
+        libraryBases = ['**/libs/']
+        libraryFiles = ['jquery.js', 'lib1.js'] // <1>
+
+        sourceBases = ['src/', 'app/']
+        sourceFiles = ['source1.js', '**/*.js'] // <2>
+
+        testBases = ['src/test/javascript/']
+        testFiles = ['**/*test.js'] // <3>
+    }
+}
+
 check.dependsOn tasks.test, tasks.cucumber
 
+//task karma(type: Exec) {
+//        commandLine 'karma', 'start', '--single-run true'
+//}
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
@@ -64,5 +92,7 @@ dependencies {
             "info.cukes:cucumber-core:1.2.5",
             "info.cukes:cucumber-spring:1.2.5"
     )
-    testCompile('com.github.searls:jasmine-maven-plugin:2.2')
+
+    //compile('com.github.searls:jasmine-maven-plugin:1.3.14')
+//    testCompile('com.github.searls:jasmine-maven-plugin:2.2')
 }
