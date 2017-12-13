@@ -51,10 +51,10 @@
                         <th>address</th>
                         <th><input type="checkbox" id="all" />&nbsp;Check All</th>
                     </tr>
-                    <tr th:each="mail : ${contactList}">
+                    <tr th:each="mail, stat : ${contactList}">
                         <td th:text="${mail.name}"></td>
                         <td><a href="#" th:text="${mail.mailAddress}"></a></td>
-                        <td><input type="checkbox" name="address" th:id="${mail.mailAddress}" /></td>
+                        <td><input type="checkbox" name="address" th:id="${stat.index}" /></td>
                     </tr>
                 </table>
             </form>
