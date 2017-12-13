@@ -54,6 +54,12 @@ public class MailSendSteps {
 
     @Before
     public void setup() throws Exception {
+        setupDriver();
+
+        setupAdressItem();
+    }
+
+    private void setupDriver() {
         if (driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
@@ -64,7 +70,9 @@ public class MailSendSteps {
         wiser.setPort(2500);
         wiser.setHostname("localhost");
         wiser.start();
+    }
 
+    private void setupAdressItem() throws Exception {
         new File(AddressBook.FILE_PATH).delete();
 
         addressBookService.add(new AddressItem("user1@gmail.com", "user1"));

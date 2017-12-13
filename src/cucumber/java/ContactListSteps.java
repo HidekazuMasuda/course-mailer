@@ -47,12 +47,20 @@ public class ContactListSteps {
 
     @Before
     public void setup() throws Exception {
+        setupDriver();
+
+        setupAddressItem();
+    }
+
+    private void setupDriver() {
         if(driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
         }
         driver.get("http://localhost:" + port + "/contact-list");
+    }
 
+    private void setupAddressItem() throws Exception {
         File file = new File(AddressBook.FILE_PATH);
         boolean isDelete = file.delete();
 
