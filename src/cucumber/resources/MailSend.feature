@@ -2,17 +2,6 @@ Feature: Mail Send
 
 
 # success case
-Scenario: send mail success one
-  Given address is "xxx@gmail.com"
-  And subject is "hello"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-    | from                        | to            | subject       | body      |
-    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
-
-
 Scenario: send mail success two
   Given address is "xxx@gmail.com;yyy@gmail.com"
   And subject is "hello"
@@ -90,97 +79,21 @@ Scenario: address format error: not include @
   When send
   Then error_area is "error"
 
-Scenario: address format error: only @
-  Given address is "@"
-  And subject is "hello"
-  And body is "message"
-  When send
-  Then error_area is "error"
-
-Scenario: address format error: end with @
-  Given address is "xxx@"
-  And subject is "hello"
-  And body is "message"
-  When send
-  Then error_area is "error"
-
-Scenario: address format error: start with @
-  Given address is "@xxx"
-  And subject is "hello"
-  And body is "message"
-  When send
-  Then error_area is "error"
-
-### replace subject placeholder
+### replace subject and body placeholder
 ## success case
-Scenario: replace subject success one person
+Scenario: replace subject and body success two person
   Given subject is "Hi $name"
-  And address is "user1@gmail.com"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-      | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | message   |
-
-Scenario: replace subject success two person
-  Given subject is "Hi consumers"
-  And address is "user1@gmail.com;user2@gmail.com"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-      | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi consumers    | message   |
-      | gadget.mailsender@gmail.com | user2@gmail.com | Hi consumers    | message   |
-
-Scenario: replace subject success two person but no name attribute
-  Given subject is "Hi consumers"
-  And address is "user1@gmail.com;noname@gmail.com"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-      | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi consumers    | message   |
-      | gadget.mailsender@gmail.com | noname@gmail.com | Hi consumers    | message   |
-
-### replace body placeholder
-## success case
-Scenario: replace body success one person
-  Given body is "Hi $name"
-  And subject is "Hi"
-  And address is "user1@gmail.com"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-      | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi    | Hi user1   |
-
-Scenario: replace body success two person
-  Given subject is "Hi"
   And address is "user1@gmail.com;user2@gmail.com"
   And body is "Hi $name"
   When send
   Then error_area is none
   And should receive the following emails:
       | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi    | Hi user1   |
-      | gadget.mailsender@gmail.com | user2@gmail.com | Hi    | Hi user2   |
-
-Scenario: replace body success two person but no name attribute
-  Given subject is "Hi consumers"
-  And address is "user1@gmail.com;noname@gmail.com"
-  And body is "message"
-  When send
-  Then error_area is none
-  And should receive the following emails:
-      | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi consumers    | message   |
-      | gadget.mailsender@gmail.com | noname@gmail.com | Hi consumers    | message   |
+      | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | Hi user1  |
+      | gadget.mailsender@gmail.com | user2@gmail.com | Hi user2    | Hi user2  |
 
 ## error case
-Scenario Outline: error case
+Scenario Outline: replace $name error case
   Given subject is "<subject>"
   And address is "<addresses>"
   And body is "<body>"
@@ -189,10 +102,8 @@ Scenario Outline: error case
 
   Examples:
   | subject | addresses | body |
-  | Hi $name | noname@gmail.com | hello |
   | Hi $name | noname@gmail.com;user1@gmail.com | hello |
   | Hi $name | noregisterd@gmail.com | hello |
-  | Hi       | noname@gmail.com | Hi $name |
   | Hi       | noname@gmail.com;user1@gmail.com | Hi $name |
   | Hi       | noregisterd@gmail.com| Hi $name |
 
