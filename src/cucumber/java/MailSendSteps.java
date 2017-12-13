@@ -40,7 +40,7 @@ public class MailSendSteps {
     private Wiser wiser;
 
     @Autowired
-    AddressBookService addressBookService;
+    private AddressBookService addressBookService;
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -65,8 +65,7 @@ public class MailSendSteps {
         wiser.setHostname("localhost");
         wiser.start();
 
-        File file = new File(AddressBook.FILE_PATH);
-        boolean isDelete = file.delete();
+        new File(AddressBook.FILE_PATH).delete();
 
         addressBookService.add(new AddressItem("user1@gmail.com", "user1"));
         addressBookService.add(new AddressItem("user2@gmail.com", "user2"));
@@ -111,7 +110,6 @@ public class MailSendSteps {
             fail();
         } catch (NoSuchElementException e) {
             /* こちらが正常系*/
-            return;
         }
     }
 
