@@ -41,8 +41,6 @@ cucumber {
     tags = ['~@developing']
 }
 
-
-
 karma {
     basePath = '../' // <1>
     colors = true // <2>
@@ -51,11 +49,11 @@ karma {
     frameworks = ['jasmine'] // <5>
 
     profile('default')  {
-        libraryBases = ['**/libs/']
-        libraryFiles = ['jquery.js', 'lib1.js'] // <1>
+        libraryBases = ['src/main/resources/static/lib']
+        libraryFiles = ['jquery-3.2.1.js'] // <1>
 
-        sourceBases = ['src/', 'app/']
-        sourceFiles = ['source1.js', '**/*.js'] // <2>
+        sourceBases = ['src/main/resources/static']
+        sourceFiles = ['*.js'] // <2>
 
         testBases = ['src/test/javascript']
         testFiles = ['**/*test.js'] // <3>
@@ -63,10 +61,6 @@ karma {
 }
 
 check.dependsOn tasks.test, tasks.cucumber
-
-//task karma(type: Exec) {
-//        commandLine 'karma', 'start', '--single-run true'
-//}
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
@@ -91,7 +85,4 @@ dependencies {
             "info.cukes:cucumber-core:1.2.5",
             "info.cukes:cucumber-spring:1.2.5"
     )
-
-    //compile('com.github.searls:jasmine-maven-plugin:1.3.14')
-//    testCompile('com.github.searls:jasmine-maven-plugin:2.2')
 }
