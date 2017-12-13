@@ -2,6 +2,7 @@ package com.odde.mailsender.controller;
 
 import com.odde.mailsender.data.AddressItem;
 import com.odde.mailsender.form.ContactListForm;
+import com.odde.mailsender.form.MailSendForm;
 import com.odde.mailsender.service.AddressBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,6 +41,15 @@ public class ContactListController {
         List<AddressItem> addressList = addressBookService.get();
         model.addAttribute("contactList", addressList);
         return "contact-list";
+    }
+
+    @PostMapping("/create-mail")
+    public String createEmail(@RequestParam(required = false) String[] mailAddress, Model model) {
+
+
+        model.addAttribute("address", mailAddress == null ? "" : mailAddress[0]);
+
+        return "send";
     }
 
 }
