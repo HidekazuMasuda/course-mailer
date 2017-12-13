@@ -54,38 +54,53 @@ public class MailController {
 
         try {
 
-            List<MailInfo> mailInfoList = new ArrayList<>();
-
-            String subject = form.getSubject();
-            String body = form.getBody();
-            for (String address : addresses) {
-
-                String replacedSubject = subject;
-                String replacedBody = body;
-                if (StringUtils.contains(subject, "$name") || StringUtils.contains(body, "$name")) {
-                    AddressItem addressItem = addressBookService.findByAddress(address);
-
-                    if (addressItem == null) {
-                        throw new Exception("email address is not registered");
-                    }
-                    if (StringUtils.isEmpty(addressItem.getName())) {
-                        throw new Exception("name attribute is empty!!");
-                    }
-
-                    replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
-                    replacedBody = StringUtils.replace(body, "$name", addressItem.getName());
-                }
-
-                MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, replacedBody);
-                mailInfoList.add(mail);
-            }
-
-            mailService.sendMultiple(mailInfoList);
+            validReplaceAttribute(addresses, form);
+            mailService.sendMultiple(createMailInfoList(addresses, form));
         } catch (Exception e) {
             model.addAttribute("errorMessage", "error");
-            return "send";
         }
 
         return "send";
+    }
+
+    private List<MailInfo> createMailInfoList(String[] addresses, MailSendForm form) throws Exception {
+
+        List<MailInfo> mailInfoList = new ArrayList<>();
+        String subject = form.getSubject();
+        String body = form.getBody();
+
+        for (String address : addresses) {
+
+            String replacedSubject = subject;
+            String replacedBody = body;
+
+            AddressItem addressItem = addressBookService.findByAddress(address);
+
+            if (addressItem != null) {
+                replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
+                replacedBody = StringUtils.replace(body, "$name", addressItem.getName());
+            }
+
+            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, replacedBody);
+            mailInfoList.add(mail);
+        }
+
+        return mailInfoList;
+    }
+
+    private void validReplaceAttribute(String[] addresses, MailSendForm form) throws Exception {
+        if (StringUtils.contains(form.getSubject(), "$name") || StringUtils.contains(form.getBody(), "$name")) {
+            for (String address : addresses) {
+
+                AddressItem addressItem = addressBookService.findByAddress(address);
+
+                if (addressItem == null) {
+                    throw new Exception("email address is not registered");
+                }
+                if (StringUtils.isEmpty(addressItem.getName())) {
+                    throw new Exception("name attribute is empty!!");
+                }
+            }
+        }
     }
 }
