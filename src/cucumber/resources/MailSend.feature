@@ -1,6 +1,5 @@
 Feature: Mail Send
 
-
 # success case
 Scenario: send mail success two
   Given address is "xxx@gmail.com;yyy@gmail.com"
@@ -13,7 +12,6 @@ Scenario: send mail success two
     | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
     | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |
 
-
 # 1 field error
 Scenario: address is empty
   Given address is ""
@@ -22,7 +20,6 @@ Scenario: address is empty
   When send
   Then error_area is "error"
 
-
 Scenario: subject is empty
   Given address is "xxx@gmail.com"
   And subject is ""
@@ -30,46 +27,12 @@ Scenario: subject is empty
   When send
   Then error_area is "error"
 
-
 Scenario: body is empty
   Given address is "xxx@gmail.com"
   And subject is "hello"
   And body is ""
   When send
   Then error_area is "error"
-
-
-# 2 field error
-Scenario: address, subject is empty
-  Given address is ""
-  And subject is ""
-  And body is "message"
-  When send
-  Then error_area is "error"
-
-Scenario: address, body is empty
-  Given address is ""
-  And subject is "hello"
-  And body is ""
-  When send
-  Then error_area is "error"
-
-Scenario: subject, body is empty
-  Given address is "xxx@gmail.com"
-  And subject is ""
-  And body is ""
-  When send
-  Then error_area is "error"
-
-
-# 3 field error
-Scenario: address, subject, body is empty
-  Given address is ""
-  And subject is ""
-  And body is ""
-  When send
-  Then error_area is "error"
-
 
 # address format error
 Scenario: address format error: not include @
@@ -79,8 +42,8 @@ Scenario: address format error: not include @
   When send
   Then error_area is "error"
 
-### replace subject and body placeholder
-## success case
+# replace subject and body placeholder
+# success case
 Scenario: replace subject and body success two person
   Given subject is "Hi $name"
   And address is "user1@gmail.com;user2@gmail.com"
@@ -92,7 +55,7 @@ Scenario: replace subject and body success two person
       | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | Hi user1  |
       | gadget.mailsender@gmail.com | user2@gmail.com | Hi user2    | Hi user2  |
 
-## error case
+# error case
 Scenario Outline: replace $name error case
   Given subject is "<subject>"
   And address is "<addresses>"
@@ -106,4 +69,3 @@ Scenario Outline: replace $name error case
   | Hi $name | noregisterd@gmail.com | hello |
   | Hi       | noname@gmail.com;user1@gmail.com | Hi $name |
   | Hi       | noregisterd@gmail.com| Hi $name |
-
