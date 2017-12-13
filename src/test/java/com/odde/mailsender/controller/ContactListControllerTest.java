@@ -65,17 +65,10 @@ public class ContactListControllerTest {
     }
 
     @Test
-    public void createMailOne() throws Exception {
-        mvc.perform(post("/create-mail").param("mailAddress", "aaa@yahoo.co.jp"))
-                .andExpect(view().name("send"))
-                .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp"));
-    }
-
-    @Test
     public void createMailTwo() throws Exception {
         mvc.perform(post("/create-mail").param("mailAddress", "aaa@yahoo.co.jp", "bbb@yahoo.co.jp"))
                 .andExpect(view().name("send"))
-                .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp"));
+                .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp;bbb@yahoo.co.jp"));
     }
 
 
