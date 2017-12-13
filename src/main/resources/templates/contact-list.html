@@ -54,7 +54,7 @@
                     <tr th:each="mail, stat : ${contactList}">
                         <td th:text="${mail.name}"></td>
                         <td><a href="#" th:text="${mail.mailAddress}"></a></td>
-                        <td><input type="checkbox" name="address" th:id="${stat.index}" /></td>
+                        <td><input type="checkbox" name="address" th:id="${'address' + stat.index}" /></td>
                     </tr>
                 </table>
             </form>
