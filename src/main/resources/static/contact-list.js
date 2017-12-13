@@ -1,5 +1,6 @@
 function ContactList() {}
 
 ContactList.prototype.checkAll = function() {
-    $('input[name="address"]').prop('checked', true);
+    var checked = $('#all').prop('checked');
+    $('input[name="address"]').prop('checked', checked);
 }

@@ -8,8 +8,8 @@ describe('check all', function(){
         testContainer = $('<div></div>');
 
         $('<input type="checkbox" id="all" />' +
-        '<input type="checkbox" name="address" id="user1@gmail.com" />' +
-        '<input type="checkbox" name="address" id="user2@gmail.com" />').appendTo(testContainer);
+        '<input type="checkbox" name="address" id="user1gmail.com" />' +
+        '<input type="checkbox" name="address" id="user2gmail.com" />').appendTo(testContainer);
 
         testContainer.appendTo('body');
     })
@@ -18,9 +18,17 @@ describe('check all', function(){
         testContainer.remove();
     })
 
-    it('click all checkbox', function() {
+    it('given not all check box then click all checkbox', function() {
+        $('#all').prop('checked', true);
         contactList.checkAll();
         expect($('input[name="address"]:checked').length).toEqual(2);
+    })
+
+    it('given all check box then click all checkbox', function() {
+        $('#user1gmail.com').prop('checked', true);
+        $('#user2gmail.com').prop('checked', true);
+        contactList.checkAll();
+        expect($('input[name="address"]:checked').length).toEqual(0);
     })
 
 
