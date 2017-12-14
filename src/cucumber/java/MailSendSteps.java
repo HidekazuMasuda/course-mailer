@@ -1,5 +1,7 @@
+import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -70,6 +72,7 @@ public class MailSendSteps {
         wiser.setPort(2500);
         wiser.setHostname("localhost");
         wiser.start();
+//        wiser.stop();
     }
 
     private void setupAdressItem() throws Exception {
@@ -131,5 +134,10 @@ public class MailSendSteps {
             assertThat(wiserMessage.getMimeMessage().getSubject(), is(mails.get(i).getSubject()));
             assertThat(wiserMessage.toString(), containsString(mails.get(i).getBody()));
         }
+    }
+
+    @And("^mail server is stopping$")
+    public void mailServerIsStopping() throws Throwable {
+        wiser.stop();
     }
 }
