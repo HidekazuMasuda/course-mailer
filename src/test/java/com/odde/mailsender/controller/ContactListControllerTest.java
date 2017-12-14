@@ -69,7 +69,8 @@ public class ContactListControllerTest {
                 .andExpect(view().name("contact-list")).andReturn();
         BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
 
-        Assert.assertTrue(result.hasErrors());
+        Assert.assertEquals(1, result.getErrorCount());
+
         Assert.assertEquals("{0} may not be empty", result.getFieldError("address").getDefaultMessage());
     }
 
@@ -82,8 +83,8 @@ public class ContactListControllerTest {
                 .andExpect(view().name("contact-list")).andReturn();
         BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
 
-        Assert.assertTrue(result.hasErrors());
-        Assert.assertEquals("{0} may not be empty", result.getFieldError("address").getDefaultMessage());
+        Assert.assertEquals(1, result.getErrorCount());
+        Assert.assertEquals("Address format is wrong", result.getFieldError("address").getDefaultMessage());
     }
 
     @Test
