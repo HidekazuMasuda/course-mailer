@@ -1,9 +1,6 @@
 package com.odde.mailsender.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 public class ContactListForm {
-    @NotEmpty
     private String address;
     private String name;
 

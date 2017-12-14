@@ -34,21 +34,15 @@ public class ContactListController {
     @PostMapping("/contact-list")
     public String addContactList(@Valid @ModelAttribute("form") ContactListForm form, BindingResult result, Model model) {
 
-        if(Validator.isNotEmpty(form.getAddress()) && !Validator.isMailAddress(form.getAddress())) {
-            result.rejectValue("address","not.Mail", "not email format");
-        }
-
-        if (result.hasErrors()) {
-            return "contact-list";
-        }
+//        if(Validator.isNotEmpty(form.getAddress()) && !Validator.isMailAddress(form.getAddress())) {
+//            result.rejectValue("address","not.Mail", "not email format");
+//        }
 
         AddressItem input = new AddressItem(form.getAddress(), form.getName());
         try {
             addressBookService.add(input);
-
         } catch (Exception e) {
             result.rejectValue("","", e.getMessage());
-            return "contact-list";
         }
         List<AddressItem> addressList = addressBookService.get();
         model.addAttribute("contactList", addressList);
