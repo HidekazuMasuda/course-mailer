@@ -65,7 +65,7 @@ public class MailControllerTest {
     @Test
     public void showErrorIfEmptyMailAddress() throws Exception {
         getPerform(validMail().withTo("").build())
-                .andExpect(model().attribute("errorMessage", "error"))
+                .andExpect(model().attribute("errorMessage", "Address may not be empty."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -74,7 +74,7 @@ public class MailControllerTest {
     @Test
     public void showErrorIfEmptySubject() throws Exception {
         getPerform(validMail().withSubject("").build())
-                .andExpect(model().attribute("errorMessage", "error"))
+                .andExpect(model().attribute("errorMessage", "Subject may not be empty."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -83,7 +83,7 @@ public class MailControllerTest {
     @Test
     public void showErrorIfEmptyBody() throws Exception {
         getPerform(validMail().withBody("").build())
-                .andExpect(model().attribute("errorMessage", "error"))
+                .andExpect(model().attribute("errorMessage", "Body may not be empty."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -92,6 +92,7 @@ public class MailControllerTest {
     @Test
     public void manyAddressWithInvalidAddress() throws Exception {
         getPerform(validMail().withTo("abcdefghi123@xxx.com ; xxx.com; stanly@xxx.com").build())
+                .andExpect(model().attribute("errorMessage", "Address format is wrong."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -117,6 +118,7 @@ public class MailControllerTest {
     @Test
     public void notSubjectReplaceWhenNotRegisteredAddress() throws Exception {
         getPerform(validMail().withSubject("Hello $name").withTo("foobar@xxx.com").build())
+                .andExpect(model().attribute("errorMessage", "When you use template, choose email from contract list that has a name."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -125,6 +127,7 @@ public class MailControllerTest {
     @Test
     public void notBodyReplaceWhenNotRegisteredAddress() throws Exception {
         getPerform(validMail().withBody("Hi $name").withTo("foobar@xxx.com").build())
+                .andExpect(model().attribute("errorMessage", "When you use template, choose email from contract list that has a name."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -137,6 +140,7 @@ public class MailControllerTest {
         MailInfo mailInfo = validMail().withSubject("Hi $name").withTo(noNameAddress.getMailAddress()).build();
 
         getPerform(mailInfo)
+                .andExpect(model().attribute("errorMessage", "When you use template, choose email from contract list that has a name."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
@@ -150,6 +154,7 @@ public class MailControllerTest {
         MailInfo mailInfo = validMail().withBody("Hi $name").withTo(noNameAddress.getMailAddress()).build();
 
         getPerform(mailInfo)
+                .andExpect(model().attribute("errorMessage", "When you use template, choose email from contract list that has a name."))
                 .andExpect(view().name("send"));
 
         verify(mailService, never()).sendMultiple(any());
