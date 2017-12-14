@@ -46,9 +46,13 @@ public class ContactListController {
     @PostMapping("/create-mail")
     public String createEmail(@RequestParam(required = false) String[] mailAddress, Model model) {
 
-        model.addAttribute("address", mailAddress == null ? "" : String.join(";", mailAddress));
+        model.addAttribute("address", joinMailAddress(mailAddress));
 
         return "send";
+    }
+
+    private String joinMailAddress(String[] mailAddress) {
+        return mailAddress == null ? "" : String.join(";", mailAddress);
     }
 
 }
