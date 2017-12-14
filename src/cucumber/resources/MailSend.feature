@@ -37,6 +37,16 @@ Scenario: body is empty
   When send
   Then error_area is "Body may not be empty."
 
+@developing
+Scenario: address and subject and body are empty
+  Given address is ""
+  And subject is ""
+  And body is ""
+  When send
+  Then error_area contains "Address may not be empty."
+  And error_area contains "Subject may not be empty."
+  And error_area contains "Body may not be empty."
+
 # address format error
 @developing
 Scenario: address format error: not include @

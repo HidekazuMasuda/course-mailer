@@ -20,7 +20,7 @@ public class AddressBookServiceImpl implements AddressBookService {
             addressBook.add(addressItem);
             addressBook.save();
         }else{
-            throw new Exception("mail address is empty");
+            throw new Exception("mail address is not a well-formed email address");
         }
     }
 
