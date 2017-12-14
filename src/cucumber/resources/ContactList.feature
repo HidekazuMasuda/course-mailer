@@ -14,7 +14,7 @@ Scenario: add an address
 Scenario: add a wrong address
   Given ContactList address is "xxx"
   When add
-  Then ContactList error_area is "Address format is wrong."
+  Then ContactList error_area is "Address format is wrong"
 
 # duplicate address error case
 @developing
@@ -22,7 +22,7 @@ Scenario: add a duplicate address
   Given ContactList address is "xxx@gmail.com"
   And ContactList has "xxx@gmail.com"
   When add
-  Then ContactList error_area is "Duplicate address."
+  Then ContactList error_area is "Duplicate address"
 
 # case for adding name
 # success case
@@ -40,7 +40,7 @@ Scenario: add a name only
   Given ContactList address is ""
   And ContactList name is "xxxxxx"
   When add
-  Then ContactList error_area is "Address may not empty."
+  Then ContactList error_area is "Address may not empty"
 
 # check no address
 Scenario: check no address

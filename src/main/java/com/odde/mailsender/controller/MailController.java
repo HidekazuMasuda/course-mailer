@@ -38,7 +38,6 @@ public class MailController {
     public String sendEmail(@Valid @ModelAttribute("form") MailSendForm form, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("errorMessage", "error");
             return "send";
         }
 
@@ -48,6 +47,7 @@ public class MailController {
                 .anyMatch(address -> !Validator.isMailAddress(address));
 
         if (isValid) {
+
             model.addAttribute("errorMessage", "error");
             return "send";
         }
