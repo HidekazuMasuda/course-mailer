@@ -128,19 +128,17 @@ public class ContactListSteps {
 
     @Then("^MailSender address is \"([^\"]*)\"$")
     public void mail_sender_address_is(String address) throws Throwable {
-        String html = driver.findElement(By.id("address")).getText();
+        String html = driver.findElement(By.id("address")).getAttribute("value");
         Assert.assertEquals(address, html);
     }
 
     @Given("^No ContactList is checked$")
     public void no_contact_list_is_checked() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
     }
 
     @Given("^checked ContactList is \"([^\"]*)\"$")
     public void checked_contact_list_is(String address) throws Throwable {
-        driver.findElement(By.id(address)).click();
+        driver.findElement(By.cssSelector("input[value='" + address + "']")).click();
     }
 
     @Given("^checked all ContactList$")

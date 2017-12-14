@@ -40,14 +40,12 @@ Scenario: add a name only
   Then ContactList error_area is "error"
 
 # check no address
-@developing
 Scenario: check no address
   Given No ContactList is checked
   When create email
   Then MailSender address is ""
 
 # check only address
-@developing
 Scenario: check two addresses
   Given checked ContactList is "user1@gmail.com"
   And checked ContactList is "user2@gmail.com"
@@ -55,7 +53,6 @@ Scenario: check two addresses
   Then MailSender address is "user1@gmail.com;user2@gmail.com"
 
 # check all address
-@developing
 Scenario: check all addresses
   Given checked all ContactList
   When create email
