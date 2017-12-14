@@ -86,3 +86,7 @@ dependencies {
             "info.cukes:cucumber-spring:1.2.5"
     )
 }
+
+bootRun {
+    addResources = true
+}
