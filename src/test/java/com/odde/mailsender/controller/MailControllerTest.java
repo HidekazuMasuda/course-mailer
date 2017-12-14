@@ -15,19 +15,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import static com.odde.mailsender.service.MailBuilder.*;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -64,11 +68,22 @@ public class MailControllerTest {
 
     @Test
     public void showErrorIfEmptyMailAddress() throws Exception {
-        getPerform(validMail().withTo("").build())
-                .andExpect(model().attribute("errorMessage", "Address may not be empty."))
-                .andExpect(view().name("send"));
+        MvcResult mvcResult = getPerform(validMail().withTo("").build())
+              //  .andExpect(model().attribute("errorMessage", "Address may not be empty."))
+                .andExpect(view().name("send"))
+        .andReturn();
+
+        assertErrorMessage(mvcResult, "Address format is wrong.");
 
         verify(mailService, never()).sendMultiple(any());
+    }
+
+    private void assertErrorMessage(MvcResult mvcResult, String errorMessage) {
+        ModelAndView mav = mvcResult.getModelAndView();
+        List<ObjectError> objectErrors = ((BindingResult) mav.getModel().get(
+                "org.springframework.validation.BindingResult.form")).getAllErrors();
+
+        assertTrue(objectErrors.stream().map(i -> i.getDefaultMessage()).anyMatch(i -> i.equals(errorMessage)));
     }
 
     @Test
