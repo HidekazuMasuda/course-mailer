@@ -47,6 +47,7 @@ public class ContactListController {
     public String createEmail(@RequestParam(required = false) String[] mailAddress, Model model) {
 
         model.addAttribute("address", joinMailAddress(mailAddress));
+        model.addAttribute("form", new MailSendForm());
 
         return "send";
     }

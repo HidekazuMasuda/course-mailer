@@ -30,12 +30,12 @@ public class MailController {
     private AddressBookService addressBookService;
 
     @GetMapping("/send")
-    public String send(Model model) {
+    public String send(@ModelAttribute("form") MailSendForm form, BindingResult result, Model model) {
         return "send";
     }
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public String sendEmail(@Valid @ModelAttribute MailSendForm form, BindingResult result, Model model) {
+    public String sendEmail(@Valid @ModelAttribute("form") MailSendForm form, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "error");

@@ -15,6 +15,13 @@
                 <li role="presentation" class="active"><a href="/send">HOME</a></li>
                 <li role="presentation"><a href="/contact-list">Contact List</a></li>
             </ul>
+            <ul th:object="${form}">
+                <li th:each="error : ${#fields.detailedErrors()}">
+                    <span th:text="${error.message}"></span>
+                </li>
+
+            </ul>
+
             <div th:if="${errorMessage} eq error" class="panel panel-danger">
                 <div class="panel-heading">
                     <h3 class="panel-title">Error</h3>

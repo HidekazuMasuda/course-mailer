@@ -10,7 +10,6 @@ public class MailSendForm {
 
 
     @NotEmpty
-
     private String address;
     @NotEmpty
     private String subject;
