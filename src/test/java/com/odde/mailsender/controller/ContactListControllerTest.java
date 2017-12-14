@@ -2,6 +2,7 @@ package com.odde.mailsender.controller;
 
 import com.odde.mailsender.service.AddressBookService;
 import com.odde.mailsender.data.AddressItem;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +61,32 @@ public class ContactListControllerTest {
     }
 
     @Test
+    public void addEmptyEmailAddress() throws Exception {
+
+        MvcResult mvcResult = mvc.perform(post("/contact-list")
+                .param("address", "")
+                .param("name", "aaa"))
+                .andExpect(view().name("contact-list")).andReturn();
+        BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
+
+        Assert.assertTrue(result.hasErrors());
+        Assert.assertEquals("{0} may not be empty", result.getFieldError("address").getDefaultMessage());
+    }
+
+    @Test
+    public void addNotValidEmailAddress() throws Exception {
+
+        MvcResult mvcResult = mvc.perform(post("/contact-list")
+                .param("address", "aaa")
+                .param("name", "aaa"))
+                .andExpect(view().name("contact-list")).andReturn();
+        BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
+
+        Assert.assertTrue(result.hasErrors());
+        Assert.assertEquals("{0} may not be empty", result.getFieldError("address").getDefaultMessage());
+    }
+
+    @Test
     public void createMailEmpty() throws Exception {
         mvc.perform(post("/create-mail"))
                 .andExpect(view().name("send"))
@@ -70,6 +99,8 @@ public class ContactListControllerTest {
                 .andExpect(view().name("send"))
                 .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp;bbb@yahoo.co.jp"));
     }
+
+
 
 
 
