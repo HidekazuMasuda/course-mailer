@@ -140,4 +140,10 @@ public class MailSendSteps {
     public void mailServerIsStopping() throws Throwable {
         wiser.stop();
     }
+
+    @Then("^error_area contains \"([^\"]*)\"$")
+    public void error_areaContains(String errorMessage) throws Throwable {
+        String actual = driver.findElement(By.id("error-area")).getText();
+        Assert.assertTrue(actual.contains(errorMessage));
+    }
 }
