@@ -19,7 +19,7 @@ Scenario: address is empty
   And subject is "hello"
   And body is "message"
   When send
-  Then error_area is "Address may not be empty."
+  Then error_area is "Address may not be empty"
 
 @developing
 Scenario: subject is empty
@@ -27,7 +27,7 @@ Scenario: subject is empty
   And subject is ""
   And body is "message"
   When send
-  Then error_area is "Subject may not be empty."
+  Then error_area is "Subject may not be empty"
 
 @developing
 Scenario: body is empty
@@ -35,7 +35,7 @@ Scenario: body is empty
   And subject is "hello"
   And body is ""
   When send
-  Then error_area is "Body may not be empty."
+  Then error_area is "Body may not be empty"
 
 @developing
 Scenario: address and subject and body are empty
@@ -43,9 +43,9 @@ Scenario: address and subject and body are empty
   And subject is ""
   And body is ""
   When send
-  Then error_area contains "Address may not be empty."
-  And error_area contains "Subject may not be empty."
-  And error_area contains "Body may not be empty."
+  Then error_area contains "Address may not be empty"
+  And error_area contains "Subject may not be empty"
+  And error_area contains "Body may not be empty"
 
 # address format error
 @developing
@@ -54,7 +54,7 @@ Scenario: address format error: not include @
   And subject is "hello"
   And body is "message"
   When send
-  Then error_area is "Address format is wrong."
+  Then error_area is "Address format is wrong"
 
 # replace subject and body placeholder
 # success case
@@ -76,7 +76,7 @@ Scenario Outline: replace $name error case
   And address is "<addresses>"
   And body is "<body>"
   When send
-  Then error_area is "When you use template, choose email from contract list that has a name."
+  Then error_area is "When you use template, choose email from contract list that has a name"
 
   Examples:
   | subject | addresses | body |
@@ -93,7 +93,7 @@ Scenario: replace subject and body success two person
   And body is "Hi $name"
   And mail server is stopping
   When send
-  Then error_area is "Try to send email, but failed."
+  Then error_area is "Try to send email, but failed"
   And should receive the following emails:
     | from                        | to            | subject       | body      |
     | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | Hi user1  |
