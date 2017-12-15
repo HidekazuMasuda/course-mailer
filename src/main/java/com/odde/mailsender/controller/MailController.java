@@ -42,11 +42,16 @@ public class MailController {
         String[] addresses = form.getAddress().split("\\s*;\\s*");
 
         try {
-
             validReplaceAttribute(addresses, form);
+        } catch (Exception e) {
+            result.rejectValue("","", "When you use template, choose email from contract list that has a name");
+            return "send";
+        }
+
+        try {
             mailService.sendMultiple(createMailInfoList(addresses, form));
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "error");
+            result.rejectValue("","", "Try to send email, but failed");
         }
 
         return "send";
