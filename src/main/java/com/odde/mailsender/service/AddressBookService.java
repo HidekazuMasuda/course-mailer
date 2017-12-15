@@ -9,7 +9,7 @@ public interface AddressBookService {
 
     void add(AddressItem addressItem) throws Exception;
 
-    List<AddressItem> get() throws RuntimeException;
+    List<AddressItem> get();
 
-    AddressItem findByAddress(String address) throws Exception;
+    AddressItem findByAddress(String address);
 }

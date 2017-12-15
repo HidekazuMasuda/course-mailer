@@ -4,7 +4,6 @@ import com.odde.mailsender.data.AddressItem;
 import com.odde.mailsender.form.ContactListForm;
 import com.odde.mailsender.form.MailSendForm;
 import com.odde.mailsender.service.AddressBookService;
-import com.odde.mailsender.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -11,7 +11,7 @@ public class AddressBook {
     private List<AddressItem> addressItems = new ArrayList<AddressItem>();
     public static final String FILE_PATH = System.getenv("HOME") + "/course-mailer/addressbook.json";
 
-    public void load() throws Exception {
+    public void load() {
         if (!addressItems.isEmpty()) {
             addressItems.clear();
         }
@@ -19,10 +19,16 @@ public class AddressBook {
         try {
             List<String> addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
             for (String address : addressList) {
-                add(AddressItem.convertJsonToObject(address));
+                try {
+                    add(AddressItem.convertJsonToObject(address));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         } catch (FileNotFoundException e) {
             System.err.println("WARN: File not found. " + FILE_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException("WARN: File read error. " + FILE_PATH, e);
         }
     }
 
@@ -41,7 +47,7 @@ public class AddressBook {
         File directory = new File(file.getParent());
         directory.mkdirs();
 
-        if (file.exists() == false && file.createNewFile() == false) {
+        if (!file.exists() && !file.createNewFile()) {
             return false;
         }
 
@@ -57,7 +63,7 @@ public class AddressBook {
         return true;
     }
 
-    public AddressItem findByAddress(String address) throws Exception {
+    public AddressItem findByAddress(String address) {
         load();
         for (AddressItem addressItem : addressItems) {
             if (addressItem.getMailAddress().equals(address)) {

@@ -5,7 +5,6 @@ import com.odde.mailsender.form.MailSendForm;
 import com.odde.mailsender.service.AddressBookService;
 import com.odde.mailsender.service.MailInfo;
 import com.odde.mailsender.service.MailService;
-import com.odde.mailsender.utils.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 public class MailController {
@@ -42,15 +40,6 @@ public class MailController {
         }
 
         String[] addresses = form.getAddress().split("\\s*;\\s*");
-
-        boolean isValid = Stream.of(addresses)
-                .anyMatch(address -> !Validator.isMailAddress(address));
-
-        if (isValid) {
-
-            model.addAttribute("errorMessage", "error");
-            return "send";
-        }
 
         try {
 

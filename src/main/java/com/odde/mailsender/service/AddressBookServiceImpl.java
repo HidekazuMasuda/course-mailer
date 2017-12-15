@@ -2,7 +2,6 @@ package com.odde.mailsender.service;
 
 import com.odde.mailsender.data.AddressBook;
 import com.odde.mailsender.data.AddressItem;
-import com.odde.mailsender.utils.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,25 +15,17 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Override
     public void add(AddressItem addressItem) throws Exception {
         addressBook.load();
-        if(Validator.isMailAddress(addressItem.getMailAddress())){
-            addressBook.add(addressItem);
-            addressBook.save();
-        }else{
-            throw new Exception("mail address is not a well-formed email address");
-        }
+        addressBook.add(addressItem);
+        addressBook.save();
     }
 
     @Override
-    public List<AddressItem> get() throws RuntimeException {
-        try {
-            addressBook.load();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public List<AddressItem> get() {
+        addressBook.load();
         return addressBook.getAddressItems();
     }
 
-    public AddressItem findByAddress(String address) throws Exception {
+    public AddressItem findByAddress(String address) {
         return addressBook.findByAddress(address);
     }
 }

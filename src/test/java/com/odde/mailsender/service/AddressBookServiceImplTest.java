@@ -33,10 +33,6 @@ public class AddressBookServiceImplTest {
     public void addMailAddress() throws Exception {
         addressBookService.add(new AddressItem("xxx@gmail.com"));
     }
-    @Test(expected = Exception.class)
-    public void mailAddressEmpty() throws Exception {
-        addressBookService.add(new AddressItem(""));
-    }
 
     @Test
     public void getMailAddress() throws Exception {

@@ -2,6 +2,7 @@ package com.odde.mailsender.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -39,14 +40,22 @@ public class AddressItem implements Serializable {
         this.name = name;
     }
 
-    public String addressItemToString() throws IOException {
+    public String addressItemToString() {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this);
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON convert error.", e);
+        }
     }
 
-    public static AddressItem convertJsonToObject(String address) throws IOException {
+    public static AddressItem convertJsonToObject(String address) {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(address, AddressItem.class);
+        try {
+            return mapper.readValue(address, AddressItem.class);
+        } catch (IOException e) {
+            throw new RuntimeException("JSON parse error.", e);
+        }
     }
 
 
