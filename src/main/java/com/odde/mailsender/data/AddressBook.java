@@ -23,24 +23,6 @@ public class AddressBook {
         });
     }
 
-    private void clearAddressBookItems() {
-        if (!addressItems.isEmpty()) {
-            addressItems.clear();
-        }
-    }
-
-    private List<String> readAddressBookFile() {
-        List<String> addressList = new ArrayList<>();
-        try {
-            addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
-        } catch (FileNotFoundException e) {
-            System.err.println("WARN: File not found. " + FILE_PATH);
-        } catch (IOException e) {
-            throw new RuntimeException("WARN: File read error. " + FILE_PATH, e);
-        }
-        return addressList;
-    }
-
     public void add(AddressItem addressItem) throws Exception {
         for (AddressItem item : this.addressItems) {
             if (item.getMailAddress().equals(addressItem.getMailAddress())) {
@@ -82,11 +64,31 @@ public class AddressBook {
         return null;
     }
 
+    public List<AddressItem> getAddressItems() {
+        load();
+        return addressItems;
+    }
+
+    private void clearAddressBookItems() {
+        if (!addressItems.isEmpty()) {
+            addressItems.clear();
+        }
+    }
+
+    private List<String> readAddressBookFile() {
+        List<String> addressList = new ArrayList<>();
+        try {
+            addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
+        } catch (FileNotFoundException e) {
+            System.err.println("WARN: File not found. " + FILE_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException("WARN: File read error. " + FILE_PATH, e);
+        }
+        return addressList;
+    }
+
     private BufferedWriter getWriter(File file) throws UnsupportedEncodingException, FileNotFoundException {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
     }
 
-    public List<AddressItem> getAddressItems() {
-        return addressItems;
-    }
 }

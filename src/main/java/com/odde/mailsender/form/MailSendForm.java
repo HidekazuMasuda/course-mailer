@@ -57,4 +57,15 @@ public class MailSendForm {
     public String renderBodyTemplate(AddressItem addressItem) {
         return StringUtils.replace(getBody(), "$name", addressItem.getName());
     }
+
+    public static MailSendForm create(String[] addresses) {
+        MailSendForm mailSendForm = new MailSendForm();
+        mailSendForm.setAddress(joinMailAddress(addresses));
+
+        return mailSendForm;
+    }
+
+    private static  String joinMailAddress(String[] mailAddress) {
+        return mailAddress == null ? "" : String.join(";", mailAddress);
+    }
 }

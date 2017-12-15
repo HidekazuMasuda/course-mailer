@@ -24,23 +24,9 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void send(MailInfo mailInfo) throws Exception {
-        SimpleEmail simpleEmail = new SimpleEmail();
+        SimpleEmail simpleEmail = setupEmailEnvironment();
 
-        simpleEmail.setHostName(mailHost);
-        if (sslEnable) {
-            simpleEmail.setSslSmtpPort(sslSmtpPort);
-            simpleEmail.setSSL(true);
-        } else {
-            simpleEmail.setSmtpPort(smtpPort);
-        }
-
-        simpleEmail.setCharset(CHARSET);
-        simpleEmail.setAuthentication(SENDER_NAME, PASSWORD);
-
-        simpleEmail.setFrom(mailInfo.getFrom());
-        simpleEmail.setSubject(mailInfo.getSubject());
-        simpleEmail.setMsg(mailInfo.getBody());
-        simpleEmail.addTo(mailInfo.getTo());
+        setMailInfo(mailInfo, simpleEmail);
 
         try {
             simpleEmail.send();
@@ -53,5 +39,28 @@ public class MailServiceImpl implements MailService {
         for (MailInfo mailInfo : mailInfoList) {
             send(mailInfo);
         }
+    }
+
+    private SimpleEmail setupEmailEnvironment() {
+        SimpleEmail simpleEmail = new SimpleEmail();
+
+        simpleEmail.setHostName(mailHost);
+        if (sslEnable) {
+            simpleEmail.setSslSmtpPort(sslSmtpPort);
+            simpleEmail.setSSL(true);
+        } else {
+            simpleEmail.setSmtpPort(smtpPort);
+        }
+
+        simpleEmail.setCharset(CHARSET);
+        simpleEmail.setAuthentication(SENDER_NAME, PASSWORD);
+        return simpleEmail;
+    }
+
+    private void setMailInfo(MailInfo mailInfo, SimpleEmail simpleEmail) throws EmailException {
+        simpleEmail.setFrom(mailInfo.getFrom());
+        simpleEmail.setSubject(mailInfo.getSubject());
+        simpleEmail.setMsg(mailInfo.getBody());
+        simpleEmail.addTo(mailInfo.getTo());
     }
 }
