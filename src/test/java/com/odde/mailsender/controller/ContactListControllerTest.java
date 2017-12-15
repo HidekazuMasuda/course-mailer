@@ -1,5 +1,6 @@
 package com.odde.mailsender.controller;
 
+import com.odde.mailsender.form.MailSendForm;
 import com.odde.mailsender.service.AddressBookService;
 import com.odde.mailsender.data.AddressItem;
 import org.junit.Assert;
@@ -84,16 +85,18 @@ public class ContactListControllerTest {
 
     @Test
     public void createMailEmpty() throws Exception {
-        mvc.perform(post("/create-mail"))
-                .andExpect(view().name("send"))
-                .andExpect(MockMvcResultMatchers.model().attribute("address",""));
+        MvcResult mvcResult = mvc.perform(post("/create-mail"))
+                .andExpect(view().name("send")).andReturn();
+
+        Assert.assertEquals("", ((MailSendForm)mvcResult.getModelAndView().getModel().get("form")).getAddress());
     }
 
     @Test
     public void createMailTwo() throws Exception {
-        mvc.perform(post("/create-mail").param("mailAddress", "aaa@yahoo.co.jp", "bbb@yahoo.co.jp"))
-                .andExpect(view().name("send"))
-                .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp;bbb@yahoo.co.jp"));
+        MvcResult mvcResult = mvc.perform(post("/create-mail").param("mailAddress", "aaa@yahoo.co.jp", "bbb@yahoo.co.jp"))
+                .andExpect(view().name("send")).andReturn();
+
+        Assert.assertEquals("aaa@yahoo.co.jp;bbb@yahoo.co.jp", ((MailSendForm)mvcResult.getModelAndView().getModel().get("form")).getAddress());
     }
 
 
