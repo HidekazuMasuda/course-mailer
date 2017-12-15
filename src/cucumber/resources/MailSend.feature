@@ -13,7 +13,6 @@ Scenario: send mail success two
     | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |
 
 # 1 field error
-@developing
 Scenario: address is empty
   Given address is ""
   And subject is "hello"
@@ -21,7 +20,6 @@ Scenario: address is empty
   When send
   Then error_area is "Address may not be empty"
 
-@developing
 Scenario: subject is empty
   Given address is "xxx@gmail.com"
   And subject is ""
@@ -29,7 +27,6 @@ Scenario: subject is empty
   When send
   Then error_area is "Subject may not be empty"
 
-@developing
 Scenario: body is empty
   Given address is "xxx@gmail.com"
   And subject is "hello"
@@ -38,7 +35,6 @@ Scenario: body is empty
   Then error_area is "Body may not be empty"
 
 # 3 field error
-@developing
 Scenario: address and subject and body are empty
   Given address is ""
   And subject is ""
@@ -49,7 +45,6 @@ Scenario: address and subject and body are empty
   And error_area contains "Body may not be empty"
 
 # address format error
-@developing
 Scenario: address format error: not include @
   Given address is "xxx"
   And subject is "hello"
@@ -71,7 +66,6 @@ Scenario: replace subject and body success two person
       | gadget.mailsender@gmail.com | user2@gmail.com | Hi user2    | Hi user2  |
 
 # template error case
-@developing
 Scenario Outline: replace $name error case
   Given subject is "<subject>"
   And address is "<addresses>"
@@ -87,7 +81,6 @@ Scenario Outline: replace $name error case
   | Hi       | noregisterd@gmail.com| Hi $name |
 
 # server error case
-@developing
 Scenario: replace subject and body success two person
   Given subject is "Hi $name"
   And address is "user1@gmail.com;user2@gmail.com"
@@ -95,7 +88,3 @@ Scenario: replace subject and body success two person
   And mail server is stopping
   When send
   Then error_area is "Try to send email, but failed"
-  And should receive the following emails:
-    | from                        | to            | subject       | body      |
-    | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | Hi user1  |
-    | gadget.mailsender@gmail.com | user2@gmail.com | Hi user2    | Hi user2  |
