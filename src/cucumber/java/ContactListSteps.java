@@ -1,13 +1,12 @@
+import com.odde.mailsender.MailsenderApplication;
+import com.odde.mailsender.data.AddressBook;
+import com.odde.mailsender.data.AddressItem;
 import com.odde.mailsender.service.AddressBookService;
-import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import com.odde.mailsender.MailsenderApplication;
-import com.odde.mailsender.data.AddressBook;
-import com.odde.mailsender.data.AddressItem;
 import org.junit.After;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -21,10 +20,9 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
-@ContextConfiguration (classes = MailsenderApplication.class)
-@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = MailsenderApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ContactListSteps {
 
     @LocalServerPort
@@ -36,7 +34,7 @@ public class ContactListSteps {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                if(driver != null)
+                if (driver != null)
                     driver.quit();
             }
         });
@@ -53,7 +51,7 @@ public class ContactListSteps {
     }
 
     private void setupDriver() {
-        if(driver == null) {
+        if (driver == null) {
             ChromeDriverManager.getInstance().setup();
             driver = new ChromeDriver();
         }
@@ -124,7 +122,8 @@ public class ContactListSteps {
 
     @When("^create email$")
     public void create_email() throws Throwable {
-        driver.findElement(By.id("create-email")).click();    }
+        driver.findElement(By.id("create-email")).click();
+    }
 
     @Then("^MailSender address is \"([^\"]*)\"$")
     public void mail_sender_address_is(String address) throws Throwable {

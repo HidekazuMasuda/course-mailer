@@ -8,32 +8,37 @@ import java.util.List;
 
 public class AddressBook {
 
-    private List<AddressItem> addressItems = new ArrayList<AddressItem>();
+    private List<AddressItem> addressItems = new ArrayList<>();
     public static final String FILE_PATH = System.getenv("HOME") + "/course-mailer/addressbook.json";
 
     public void load() {
-        if (!addressItems.isEmpty()) {
-            addressItems.clear();
-        }
+        clearAddressBookItems();
 
-        List<String> addressList;
-        try {
-            addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
-        } catch (FileNotFoundException e) {
-            System.err.println("WARN: File not found. " + FILE_PATH);
-            return;
-        } catch (IOException e) {
-            throw new RuntimeException("WARN: File read error. " + FILE_PATH, e);
-        }
-
-        for (String address : addressList) {
+        readAddressBookFile().forEach(address -> {
             try {
                 add(AddressItem.convertJsonToObject(address));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }
+        });
+    }
 
+    private void clearAddressBookItems() {
+        if (!addressItems.isEmpty()) {
+            addressItems.clear();
+        }
+    }
+
+    private List<String> readAddressBookFile() {
+        List<String> addressList = new ArrayList<>();
+        try {
+            addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
+        } catch (FileNotFoundException e) {
+            System.err.println("WARN: File not found. " + FILE_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException("WARN: File read error. " + FILE_PATH, e);
+        }
+        return addressList;
     }
 
     public void add(AddressItem addressItem) throws Exception {

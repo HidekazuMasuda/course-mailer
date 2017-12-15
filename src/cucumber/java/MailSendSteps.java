@@ -1,4 +1,8 @@
-import cucumber.api.PendingException;
+import com.odde.mailsender.MailsenderApplication;
+import com.odde.mailsender.data.AddressBook;
+import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.service.AddressBookService;
+import com.odde.mailsender.service.MailInfo;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -6,11 +10,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import com.odde.mailsender.MailsenderApplication;
-import com.odde.mailsender.data.AddressBook;
-import com.odde.mailsender.data.AddressItem;
-import com.odde.mailsender.service.AddressBookService;
-import com.odde.mailsender.service.MailInfo;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -48,7 +47,7 @@ public class MailSendSteps {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                if(driver != null)
+                if (driver != null)
                     driver.quit();
             }
         });
