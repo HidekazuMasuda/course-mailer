@@ -52,9 +52,10 @@ public class MailController {
             mailService.sendMultiple(createMailInfoList(addresses, form));
         } catch (Exception e) {
             result.rejectValue("","", "Try to send email, but failed");
+            return "send";
         }
 
-        return "send";
+        return "redirect:/send";
     }
 
     private List<MailInfo> createMailInfoList(String[] addresses, MailSendForm form) throws Exception {

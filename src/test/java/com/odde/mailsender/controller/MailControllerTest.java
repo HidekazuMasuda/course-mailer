@@ -66,7 +66,7 @@ public class MailControllerTest {
     @Test
     public void sendToMultipleAddresses() throws Exception {
         getPerform(validMail().withTo("abc@gmail.com;john@gmail.com").build())
-                .andExpect(view().name("send"));
+                .andExpect(view().name("redirect:/send"));
 
         verify(mailService, times(1)).sendMultiple(any());
     }
@@ -103,7 +103,7 @@ public class MailControllerTest {
         MailInfo mailInfo = validMail().withSubject("Hello $name").withBody("Hi $name").withTo("gadget.mailsender@gmail.com;stanly@xxx.com").build();
 
         getPerform(mailInfo)
-                .andExpect(view().name("send"));
+                .andExpect(view().name("redirect:/send"));
 
         verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(0).getSubject().equals("Hello Aki")));
         verify(mailService).sendMultiple(argThat(mailInfoList -> mailInfoList.get(1).getSubject().equals("Hello Stanly")));
