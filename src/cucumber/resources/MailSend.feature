@@ -37,6 +37,7 @@ Scenario: body is empty
   When send
   Then error_area is "Body may not be empty"
 
+# 3 field error
 @developing
 Scenario: address and subject and body are empty
   Given address is ""
