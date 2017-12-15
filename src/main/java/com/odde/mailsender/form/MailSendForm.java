@@ -1,5 +1,7 @@
 package com.odde.mailsender.form;
 
+import com.odde.mailsender.data.AddressItem;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -44,4 +46,15 @@ public class MailSendForm {
         this.body = body;
     }
 
+    public String[] getAddresses() {
+        return getAddress().split("\\s*;\\s*");
+    }
+
+    public String renderSubjectTemplate(AddressItem addressItem) {
+        return StringUtils.replace(getSubject(), "$name", addressItem.getName());
+    }
+
+    public String renderBodyTemplate(AddressItem addressItem) {
+        return StringUtils.replace(getBody(), "$name", addressItem.getName());
+    }
 }

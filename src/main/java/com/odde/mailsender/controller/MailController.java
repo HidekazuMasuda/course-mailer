@@ -39,11 +39,9 @@ public class MailController {
             return "send";
         }
 
-        String[] addresses = form.getAddress().split("\\s*;\\s*");
-
         try {
-            validReplaceAttribute(addresses, form);
-            mailService.sendMultiple(createMailInfoList(addresses, form));
+            validReplaceAttribute(form);
+            mailService.sendMultiple(createMailInfoList(form));
         } catch (Exception e) {
             result.rejectValue("","", e.getMessage());
             return "send";
@@ -52,22 +50,20 @@ public class MailController {
         return "redirect:/send";
     }
 
-    private List<MailInfo> createMailInfoList(String[] addresses, MailSendForm form) throws Exception {
+    private List<MailInfo> createMailInfoList(MailSendForm form) throws Exception {
 
         List<MailInfo> mailInfoList = new ArrayList<>();
-        String subject = form.getSubject();
-        String body = form.getBody();
 
-        for (String address : addresses) {
+        for (String address : form.getAddresses()) {
 
-            String replacedSubject = subject;
-            String replacedBody = body;
+            String replacedSubject = form.getSubject();
+            String replacedBody = form.getBody();
 
             AddressItem addressItem = addressBookService.findByAddress(address);
 
             if (addressItem != null) {
-                replacedSubject = StringUtils.replace(subject, "$name", addressItem.getName());
-                replacedBody = StringUtils.replace(body, "$name", addressItem.getName());
+                replacedSubject = form.renderSubjectTemplate(addressItem);
+                replacedBody = form.renderBodyTemplate(addressItem);
             }
 
             MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, replacedBody);
@@ -77,9 +73,9 @@ public class MailController {
         return mailInfoList;
     }
 
-    private void validReplaceAttribute(String[] addresses, MailSendForm form) throws Exception {
+    private void validReplaceAttribute(MailSendForm form) throws Exception {
         if (StringUtils.contains(form.getSubject(), "$name") || StringUtils.contains(form.getBody(), "$name")) {
-            for (String address : addresses) {
+            for (String address : form.getAddresses()) {
 
                 AddressItem addressItem = addressBookService.findByAddress(address);
 
