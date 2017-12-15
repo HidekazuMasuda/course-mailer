@@ -25,7 +25,6 @@ public class ContactListController {
 
     @GetMapping("/contact-list")
     public String getContactList(@ModelAttribute("form") ContactListForm form, Model model) {
-
         List<AddressItem> addressList = addressBookService.get();
         model.addAttribute("contactList", addressList);
         return "contact-list";
@@ -33,30 +32,28 @@ public class ContactListController {
 
     @PostMapping("/contact-list")
     public String addContactList(@Valid @ModelAttribute("form") ContactListForm form, BindingResult result, Model model) {
-
         if(result.hasErrors()) {
-            List<AddressItem> addressList = addressBookService.get();
-            model.addAttribute("contactList", addressList);
+            addContactListToModel(model);
             return "contact-list";
         }
 
-        AddressItem input = new AddressItem(form.getAddress(), form.getName());
         try {
-            addressBookService.add(input);
+            addressBookService.add(new AddressItem(form.getAddress(), form.getName()));
         } catch (Exception e) {
             result.rejectValue("","", e.getMessage());
         }
-        List<AddressItem> addressList = addressBookService.get();
-        model.addAttribute("contactList", addressList);
+        addContactListToModel(model);
         return "contact-list";
+    }
+
+    private void addContactListToModel(Model model) {
+        model.addAttribute("contactList", addressBookService.get());
     }
 
     @PostMapping("/create-mail")
     public String createEmail(@RequestParam(required = false) String[] mailAddress, Model model) {
-
         model.addAttribute("address", joinMailAddress(mailAddress));
         model.addAttribute("form", new MailSendForm());
-
         return "send";
     }
 
