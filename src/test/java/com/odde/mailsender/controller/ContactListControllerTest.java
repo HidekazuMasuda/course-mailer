@@ -98,7 +98,8 @@ public class ContactListControllerTest {
     }
 
     private void assertAddressErrorMessage(MvcResult mvcResult, String expectMessage) {
-        BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
+        BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap()
+                .get("org.springframework.validation.BindingResult.form");
         Assert.assertEquals(expectMessage, result.getFieldError("address").getDefaultMessage());
     }
 }

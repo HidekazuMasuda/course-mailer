@@ -46,6 +46,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class MailControllerTest {
 
+    public static final String MAY_NOT_BE_EMPTY = "{0} may not be empty";
+    public static final String ADDRESS_FORMAT_IS_WRONG = "Address format is wrong";
+    public static final String WHEN_YOU_USE_TEMPLATE_CHOOSE_EMAIL_FROM_CONTRACT_LIST_THAT_HAS_A_NAME = "When you use template, choose email from contract list that has a name";
+    public static final String TRY_TO_SEND_EMAIL_BUT_FAILED = "Try to send email, but failed";
     @MockBean
     private MailService mailService;
 
@@ -77,9 +81,9 @@ public class MailControllerTest {
                 .andExpect(view().name("send"))
                 .andReturn();
 
-        assertErrorMessage(mvcResult, "address", "{0} may not be empty");
-        assertErrorMessage(mvcResult, "subject", "{0} may not be empty");
-        assertErrorMessage(mvcResult, "body", "{0} may not be empty");
+        assertErrorMessage(mvcResult, "address", MAY_NOT_BE_EMPTY);
+        assertErrorMessage(mvcResult, "subject", MAY_NOT_BE_EMPTY);
+        assertErrorMessage(mvcResult, "body", MAY_NOT_BE_EMPTY);
         verify(mailService, never()).sendMultiple(any());
     }
 
@@ -89,8 +93,8 @@ public class MailControllerTest {
                 .andExpect(view().name("send"))
                 .andReturn();
 
-        assertErrorMessage(mvcResult, "address", "Address format is wrong");
-        assertErrorMessage(mvcResult, "subject", "{0} may not be empty");
+        assertErrorMessage(mvcResult, "address", ADDRESS_FORMAT_IS_WRONG);
+        assertErrorMessage(mvcResult, "subject", MAY_NOT_BE_EMPTY);
         verify(mailService, never()).sendMultiple(any());
     }
 
@@ -117,7 +121,7 @@ public class MailControllerTest {
                 .andExpect(view().name("send"))
                 .andReturn();
 
-        assertErrorMessage(mvcResult, "", "When you use template, choose email from contract list that has a name");
+        assertErrorMessage(mvcResult, "", WHEN_YOU_USE_TEMPLATE_CHOOSE_EMAIL_FROM_CONTRACT_LIST_THAT_HAS_A_NAME);
         verify(mailService, never()).sendMultiple(any());
     }
 
@@ -127,7 +131,7 @@ public class MailControllerTest {
                 .andExpect(view().name("send"))
                 .andReturn();
 
-        assertErrorMessage(mvcResult, "", "When you use template, choose email from contract list that has a name");
+        assertErrorMessage(mvcResult, "", WHEN_YOU_USE_TEMPLATE_CHOOSE_EMAIL_FROM_CONTRACT_LIST_THAT_HAS_A_NAME);
         verify(mailService, never()).sendMultiple(any());
     }
 
@@ -140,7 +144,7 @@ public class MailControllerTest {
         MvcResult mvcResult = getPerform(mailInfo)
                 .andExpect(view().name("send")).andReturn();
 
-        assertErrorMessage(mvcResult, "", "When you use template, choose email from contract list that has a name");
+        assertErrorMessage(mvcResult, "", WHEN_YOU_USE_TEMPLATE_CHOOSE_EMAIL_FROM_CONTRACT_LIST_THAT_HAS_A_NAME);
         verify(mailService, never()).sendMultiple(any());
     }
 
@@ -155,18 +159,18 @@ public class MailControllerTest {
                 .andExpect(view().name("send"))
                 .andReturn();
 
-        assertErrorMessage(mvcResult, "", "When you use template, choose email from contract list that has a name");
+        assertErrorMessage(mvcResult, "", WHEN_YOU_USE_TEMPLATE_CHOOSE_EMAIL_FROM_CONTRACT_LIST_THAT_HAS_A_NAME);
         verify(mailService, never()).sendMultiple(any());
     }
 
     @Test
     public void mailServerHasDown()  throws Exception {
-        doThrow(new Exception("Try to send email, but failed")).when(mailService).sendMultiple(any(List.class));
+        doThrow(new Exception(TRY_TO_SEND_EMAIL_BUT_FAILED)).when(mailService).sendMultiple(any(List.class));
         MvcResult mvcResult = getPerform(validMail().withTo("abc@gmail.com;john@gmail.com").build())
                 .andExpect(view().name("send"))
                 .andReturn();
 
-        assertErrorMessage(mvcResult, "", "Try to send email, but failed");
+        assertErrorMessage(mvcResult, "", TRY_TO_SEND_EMAIL_BUT_FAILED);
         verify(mailService, times(1)).sendMultiple(any());
     }
 
