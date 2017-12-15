@@ -1,6 +1,7 @@
 package com.odde.mailsender.form;
 
 import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.service.MailInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -67,5 +68,17 @@ public class MailSendForm {
 
     private static  String joinMailAddress(String[] mailAddress) {
         return mailAddress == null ? "" : String.join(";", mailAddress);
+    }
+
+    public boolean isTemplate() {
+        return StringUtils.contains(getSubject(), "$name") || StringUtils.contains(getBody(), "$name");
+    }
+
+    public MailInfo createRenderedMail(AddressItem addressItem) {
+        return new MailInfo("gadget.mailsender@gmail.com", addressItem.getMailAddress(), renderSubjectTemplate(addressItem), renderBodyTemplate(addressItem));
+    }
+
+    public MailInfo createNormalMail(String address) {
+        return new MailInfo("gadget.mailsender@gmail.com", address, getSubject(), getBody());
     }
 }

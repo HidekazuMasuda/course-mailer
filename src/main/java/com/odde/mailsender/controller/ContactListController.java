@@ -24,8 +24,7 @@ public class ContactListController {
 
     @GetMapping("/contact-list")
     public String getContactList(@ModelAttribute("form") ContactListForm form, Model model) {
-        List<AddressItem> addressList = addressBookService.get();
-        model.addAttribute("contactList", addressList);
+        model.addAttribute("contactList", addressBookService.get());
         return "contact-list";
     }
 

@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class MailController {
@@ -40,49 +42,28 @@ public class MailController {
         }
 
         try {
-            validReplaceAttribute(form);
-            mailService.sendMultiple(createMailInfoList(form));
+            if (!form.isTemplate()) {
+                mailService.sendMultiple(Arrays.stream(form.getAddresses()).map(form::createNormalMail).collect(Collectors.toList()));
+                return "redirect:/send";
+            }
+
+            List<MailInfo> mails = new ArrayList<>();
+            for (String address : form.getAddresses()) {
+                if (contactNameExists(addressBookService.findByAddress(address)))
+                    throw new Exception("When you use template, choose email from contract list that has a name");
+
+                mails.add(form.createRenderedMail(addressBookService.findByAddress(address)));
+            }
+            mailService.sendMultiple(mails);
+            return "redirect:/send";
         } catch (Exception e) {
-            result.rejectValue("","", e.getMessage());
+            result.rejectValue("", "", e.getMessage());
             return "send";
         }
-
-        return "redirect:/send";
     }
 
-    private List<MailInfo> createMailInfoList(MailSendForm form) throws Exception {
-
-        List<MailInfo> mailInfoList = new ArrayList<>();
-
-        for (String address : form.getAddresses()) {
-
-            String replacedSubject = form.getSubject();
-            String replacedBody = form.getBody();
-
-            AddressItem addressItem = addressBookService.findByAddress(address);
-
-            if (addressItem != null) {
-                replacedSubject = form.renderSubjectTemplate(addressItem);
-                replacedBody = form.renderBodyTemplate(addressItem);
-            }
-
-            MailInfo mail = new MailInfo("gadget.mailsender@gmail.com", address, replacedSubject, replacedBody);
-            mailInfoList.add(mail);
-        }
-
-        return mailInfoList;
+    private boolean contactNameExists(AddressItem addressItem) {
+        return addressItem == null || StringUtils.isEmpty(addressItem.getName());
     }
 
-    private void validReplaceAttribute(MailSendForm form) throws Exception {
-        if (StringUtils.contains(form.getSubject(), "$name") || StringUtils.contains(form.getBody(), "$name")) {
-            for (String address : form.getAddresses()) {
-
-                AddressItem addressItem = addressBookService.findByAddress(address);
-
-                if (addressItem == null || StringUtils.isEmpty(addressItem.getName())) {
-                    throw new Exception("When you use template, choose email from contract list that has a name");
-                }
-            }
-        }
-    }
 }
