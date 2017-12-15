@@ -10,14 +10,12 @@ Scenario: add an address
   And ContactList name is added ""
 
 # address format error case
-@developing
 Scenario: add a wrong address
   Given ContactList address is "xxx"
   When add
   Then ContactList error_area is "Address format is wrong"
 
 # duplicate address error case
-@developing
 Scenario: add a duplicate address
   Given ContactList address is "xxx@gmail.com"
   And ContactList has "xxx@gmail.com"
@@ -35,12 +33,11 @@ Scenario: add both name and email
   And ContactList name is added "xxx"
 
 # address format error case
-@developing
 Scenario: add a name only
   Given ContactList address is ""
   And ContactList name is "xxxxxx"
   When add
-  Then ContactList error_area is "Address may not empty"
+  Then ContactList error_area is "Address may not be empty"
 
 # check no address
 Scenario: check no address

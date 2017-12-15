@@ -35,7 +35,7 @@ public class AddressBook {
     public void add(AddressItem addressItem) throws Exception {
         for (AddressItem item : this.addressItems) {
             if (item.getMailAddress().equals(addressItem.getMailAddress())) {
-                throw new Exception("Duplicate mail address");
+                throw new Exception("Duplicate address");
             }
         }
         this.addressItems.add(addressItem);
