@@ -16,20 +16,24 @@ public class AddressBook {
             addressItems.clear();
         }
 
+        List<String> addressList;
         try {
-            List<String> addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
-            for (String address : addressList) {
-                try {
-                    add(AddressItem.convertJsonToObject(address));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");
         } catch (FileNotFoundException e) {
             System.err.println("WARN: File not found. " + FILE_PATH);
+            return;
         } catch (IOException e) {
             throw new RuntimeException("WARN: File read error. " + FILE_PATH, e);
         }
+
+        for (String address : addressList) {
+            try {
+                add(AddressItem.convertJsonToObject(address));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     public void add(AddressItem addressItem) throws Exception {
