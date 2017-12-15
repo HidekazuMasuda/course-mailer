@@ -43,15 +43,9 @@ public class MailController {
 
         try {
             validReplaceAttribute(addresses, form);
-        } catch (Exception e) {
-            result.rejectValue("","", "When you use template, choose email from contract list that has a name");
-            return "send";
-        }
-
-        try {
             mailService.sendMultiple(createMailInfoList(addresses, form));
         } catch (Exception e) {
-            result.rejectValue("","", "Try to send email, but failed");
+            result.rejectValue("","", e.getMessage());
             return "send";
         }
 
@@ -89,11 +83,8 @@ public class MailController {
 
                 AddressItem addressItem = addressBookService.findByAddress(address);
 
-                if (addressItem == null) {
-                    throw new Exception("email address is not registered");
-                }
-                if (StringUtils.isEmpty(addressItem.getName())) {
-                    throw new Exception("name attribute is empty!!");
+                if (addressItem == null || StringUtils.isEmpty(addressItem.getName())) {
+                    throw new Exception("When you use template, choose email from contract list that has a name");
                 }
             }
         }

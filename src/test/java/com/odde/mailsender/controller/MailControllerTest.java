@@ -161,7 +161,7 @@ public class MailControllerTest {
 
     @Test
     public void mailServerHasDown()  throws Exception {
-        doThrow(new Exception()).when(mailService).sendMultiple(any(List.class));
+        doThrow(new Exception("Try to send email, but failed")).when(mailService).sendMultiple(any(List.class));
         MvcResult mvcResult = getPerform(validMail().withTo("abc@gmail.com;john@gmail.com").build())
                 .andExpect(view().name("send"))
                 .andReturn();
