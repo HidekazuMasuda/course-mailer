@@ -1,5 +1,6 @@
 package com.odde.mailsender.service;
 
+import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,12 @@ public class MailServiceImpl implements MailService {
         simpleEmail.setSubject(mailInfo.getSubject());
         simpleEmail.setMsg(mailInfo.getBody());
         simpleEmail.addTo(mailInfo.getTo());
-        simpleEmail.send();
+
+        try {
+            simpleEmail.send();
+        } catch (EmailException e) {
+            throw new Exception("Try to send email, but failed");
+        }
     }
 
     public void sendMultiple(List<MailInfo> mailInfoList) throws Exception {
