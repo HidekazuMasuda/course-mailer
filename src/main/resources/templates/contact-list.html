@@ -37,10 +37,14 @@
                     <label for="address">Address</label>
                     <table>
                         <tr>
-                            <td width="30%"><input type="text" class="form-control" name="name" id="name"
-                                       placeholder="name"/></td>
-                            <td><input type="text" class="form-control" name="address" id="address"
-                                       placeholder="address"/></td>
+                            <td width="30%">
+                                <input type="text" class="form-control" name="name" id="name" th:field="*{name}"
+                                       placeholder="name"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="address" id="address" th:field="*{address}"
+                                       placeholder="address"/>
+                            </td>
                             <td>
                                 <button type="submit" id="add" class="btn btn-default">Add</button>
                             </td>

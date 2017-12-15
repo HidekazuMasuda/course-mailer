@@ -49,7 +49,7 @@ public class ContactListControllerTest {
 
     @Test
     public void addEmailAddress() throws Exception {
-        performContactList("aaa@yahoo.co.jp", "aaa");
+        performContactListSuccess("aaa@yahoo.co.jp", "aaa");
 
         verify(addressBookService).add(argThat(mail -> mail.getMailAddress().equals("aaa@yahoo.co.jp")));
         verify(addressBookService).add(argThat(mail -> mail.getName().equals("aaa")));
@@ -57,30 +57,13 @@ public class ContactListControllerTest {
 
     @Test
     public void addEmptyEmailAddress() throws Exception {
-        assertAddressErrorMessage(performContactList(""), "{0} may not be empty");
+        assertAddressErrorMessage(performContactListError(""), "{0} may not be empty");
     }
 
     @Test
     public void addNotValidEmailAddress() throws Exception {
-        assertAddressErrorMessage(performContactList("aaa"), "Address format is wrong");
+        assertAddressErrorMessage(performContactListError("aaa"), "Address format is wrong");
     }
-
-    private MvcResult performContactList(String addressValue) throws Exception {
-        return performContactList(addressValue, "aaa");
-    }
-
-    private MvcResult performContactList(String addressValue, String nameValue) throws Exception {
-        return mvc.perform(post("/contact-list")
-                .param("address", addressValue)
-                .param("name", nameValue))
-                .andExpect(view().name("contact-list")).andReturn();
-    }
-
-    private void assertAddressErrorMessage(MvcResult mvcResult, String expectMessage) {
-        BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
-        Assert.assertEquals(expectMessage, result.getFieldError("address").getDefaultMessage());
-    }
-
 
     @Test
     public void createMailEmpty() throws Exception {
@@ -96,8 +79,23 @@ public class ContactListControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attribute("address","aaa@yahoo.co.jp;bbb@yahoo.co.jp"));
     }
 
+    private MvcResult performContactListSuccess(String addressValue, String nameValue) throws Exception {
+        return performContactList(addressValue, nameValue, "redirect:/contact-list");
+    }
 
+    private MvcResult performContactListError(String addressValue) throws Exception {
+        return performContactList(addressValue, "aaa", "contact-list");
+    }
 
+    private MvcResult performContactList(String addressValue, String nameValue, String expectedViewName) throws Exception {
+        return mvc.perform(post("/contact-list")
+                .param("address", addressValue)
+                .param("name", nameValue))
+                .andExpect(view().name(expectedViewName)).andReturn();
+    }
 
-
+    private void assertAddressErrorMessage(MvcResult mvcResult, String expectMessage) {
+        BeanPropertyBindingResult result = (BeanPropertyBindingResult)mvcResult.getModelAndView().getModelMap().get("org.springframework.validation.BindingResult.form");
+        Assert.assertEquals(expectMessage, result.getFieldError("address").getDefaultMessage());
+    }
 }

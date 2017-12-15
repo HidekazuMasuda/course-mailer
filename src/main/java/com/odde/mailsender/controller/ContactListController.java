@@ -40,9 +40,10 @@ public class ContactListController {
             addressBookService.add(new AddressItem(form.getAddress(), form.getName()));
         } catch (Exception e) {
             result.rejectValue("","", e.getMessage());
+            return "contact-list";
         }
-        addContactListToModel(model);
-        return "contact-list";
+
+        return "redirect:/contact-list";
     }
 
     private void addContactListToModel(Model model) {
