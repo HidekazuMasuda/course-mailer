@@ -1,10 +1,7 @@
 package com.odde.mailsender.form;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class MailSendForm {
@@ -44,4 +41,14 @@ public class MailSendForm {
         this.body = body;
     }
 
+    public static MailSendForm create(String[] addresses) {
+        MailSendForm mailSendForm = new MailSendForm();
+        mailSendForm.setAddress(joinMailAddress(addresses));
+
+        return mailSendForm;
+    }
+
+    private static  String joinMailAddress(String[] mailAddress) {
+        return mailAddress == null ? "" : String.join(";", mailAddress);
+    }
 }

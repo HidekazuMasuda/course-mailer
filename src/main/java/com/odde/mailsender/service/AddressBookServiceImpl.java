@@ -21,7 +21,6 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public List<AddressItem> get() {
-        addressBook.load();
         return addressBook.getAddressItems();
     }
 

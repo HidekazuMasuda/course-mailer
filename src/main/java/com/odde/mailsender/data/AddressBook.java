@@ -87,6 +87,7 @@ public class AddressBook {
     }
 
     public List<AddressItem> getAddressItems() {
+        load();
         return addressItems;
     }
 }
