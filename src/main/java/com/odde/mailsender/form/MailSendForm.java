@@ -75,10 +75,10 @@ public class MailSendForm {
     }
 
     public MailInfo createRenderedMail(AddressItem addressItem) {
-        return new MailInfo("gadget.mailsender@gmail.com", addressItem.getMailAddress(), renderSubjectTemplate(addressItem), renderBodyTemplate(addressItem));
+        return new MailInfo("course.mailer@gmail.com", addressItem.getMailAddress(), renderSubjectTemplate(addressItem), renderBodyTemplate(addressItem));
     }
 
     public MailInfo createNormalMail(String address) {
-        return new MailInfo("gadget.mailsender@gmail.com", address, getSubject(), getBody());
+        return new MailInfo("course.mailer@gmail.com", address, getSubject(), getBody());
     }
 }

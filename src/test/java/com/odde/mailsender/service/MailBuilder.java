@@ -8,7 +8,7 @@ public class MailBuilder {
     }
 
     public static MailBuilder validMail(){
-        return new MailBuilder(new MailInfo("gadget.mailsender@gmail.com", "gadget.mailsender@gmail.com", "subject", "some body."));
+        return new MailBuilder(new MailInfo("course.mailer@gmail.com", "course.mailer@gmail.com", "subject", "some body."));
     }
 
     public MailInfo build() {

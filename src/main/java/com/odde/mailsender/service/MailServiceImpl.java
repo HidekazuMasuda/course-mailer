@@ -19,6 +19,7 @@ public class MailServiceImpl implements MailService {
     @Value("${smtp.ssl.enable}")
     private Boolean sslEnable;
     private static final String CHARSET = "ISO-2022-JP";
+    // TODO: to change mail sender, create gmail account by another name.
     private static final String SENDER_NAME = "gadget.mailsender";
     private static final String PASSWORD = "mailsender";
 

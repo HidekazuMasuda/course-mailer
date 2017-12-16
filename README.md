@@ -1,4 +1,4 @@
-# gadget-mailsender
+# course-mailer
 
 
 # production run 

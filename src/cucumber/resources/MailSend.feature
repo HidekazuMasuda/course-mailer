@@ -9,8 +9,8 @@ Scenario: send mail success two
   Then error_area is none
   And should receive the following emails:
     | from                        | to            | subject       | body      |
-    | gadget.mailsender@gmail.com | xxx@gmail.com | hello         | message   |
-    | gadget.mailsender@gmail.com | yyy@gmail.com | hello         | message   |
+    | course.mailer@gmail.com | xxx@gmail.com | hello         | message   |
+    | course.mailer@gmail.com | yyy@gmail.com | hello         | message   |
 
 # 1 field error
 Scenario: address is empty
@@ -62,8 +62,8 @@ Scenario: replace subject and body success two person
   Then error_area is none
   And should receive the following emails:
       | from                        | to            | subject       | body      |
-      | gadget.mailsender@gmail.com | user1@gmail.com | Hi user1    | Hi user1  |
-      | gadget.mailsender@gmail.com | user2@gmail.com | Hi user2    | Hi user2  |
+      | course.mailer@gmail.com | user1@gmail.com | Hi user1    | Hi user1  |
+      | course.mailer@gmail.com | user2@gmail.com | Hi user2    | Hi user2  |
 
 # template error case
 Scenario Outline: replace $name error case
