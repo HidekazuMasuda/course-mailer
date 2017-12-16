@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 @Controller
 public class MailController {
 
+    private static final String SEND_VIEW = "send";
+    private static final String REDIRECT_SEND_VIEW = "redirect:/send";
+
     @Autowired
     private MailService mailService;
     @Autowired
@@ -31,20 +34,20 @@ public class MailController {
 
     @GetMapping("/send")
     public String send(@ModelAttribute("form") MailSendForm form, BindingResult result, Model model) {
-        return "send";
+        return SEND_VIEW;
     }
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public String sendEmail(@Valid @ModelAttribute("form") MailSendForm form, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            return "send";
+            return SEND_VIEW;
         }
 
         try {
             if (!form.isTemplate()) {
                 mailService.sendMultiple(Arrays.stream(form.getAddresses()).map(form::createNormalMail).collect(Collectors.toList()));
-                return "redirect:/send";
+                return REDIRECT_SEND_VIEW;
             }
 
             List<MailInfo> mails = new ArrayList<>();
@@ -55,10 +58,10 @@ public class MailController {
                 mails.add(form.createRenderedMail(addressBookService.findByAddress(address)));
             }
             mailService.sendMultiple(mails);
-            return "redirect:/send";
+            return REDIRECT_SEND_VIEW;
         } catch (Exception e) {
             result.rejectValue("", "", e.getMessage());
-            return "send";
+            return SEND_VIEW;
         }
     }
 

@@ -14,44 +14,48 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 public class ContactListController {
+
+    private static final String CONTACT_LIST_VIEW = "contact-list";
+    private static final String REDIRECT_CONTACT_LIST_VIEW = "redirect:/contact-list";
+    private static final String SEND_VIEW = "send";
 
     @Autowired
     private AddressBookService addressBookService;
 
     @GetMapping("/contact-list")
     public String getContactList(@ModelAttribute("form") ContactListForm form, Model model) {
-        model.addAttribute("contactList", addressBookService.get());
-        return "contact-list";
+        renderContractLists(model);
+        return CONTACT_LIST_VIEW;
     }
+
 
     @PostMapping("/contact-list")
     public String addContactList(@Valid @ModelAttribute("form") ContactListForm form, BindingResult result, Model model) {
         if(result.hasErrors()) {
-            addContactListToModel(model);
-            return "contact-list";
+            renderContractLists(model);
+            return CONTACT_LIST_VIEW;
         }
 
         try {
             addressBookService.add(new AddressItem(form.getAddress(), form.getName()));
         } catch (Exception e) {
             result.rejectValue("","", e.getMessage());
-            return "contact-list";
+            return CONTACT_LIST_VIEW;
         }
 
-        return "redirect:/contact-list";
-    }
-
-    private void addContactListToModel(Model model) {
-        model.addAttribute("contactList", addressBookService.get());
+        return REDIRECT_CONTACT_LIST_VIEW;
     }
 
     @PostMapping("/create-mail")
     public String createEmail(@RequestParam(required = false) String[] mailAddress, Model model) {
         model.addAttribute("form", MailSendForm.create(mailAddress));
-        return "send";
+        return SEND_VIEW;
+    }
+
+    private void renderContractLists(Model model) {
+        model.addAttribute("contactList", addressBookService.get());
     }
 }
