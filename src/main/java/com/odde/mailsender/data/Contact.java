@@ -8,18 +8,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class AddressItem implements Serializable {
+public class Contact implements Serializable {
 
     private String mailAddress;
 
     private String name;
 
-    public AddressItem(String mailAddress) {
+    public Contact(String mailAddress) {
         this.mailAddress = mailAddress;
     }
 
     @JsonCreator
-    public AddressItem(@JsonProperty("mailAddress") String mailAddress, @JsonProperty("name") String name) {
+    public Contact(@JsonProperty("mailAddress") String mailAddress, @JsonProperty("name") String name) {
         this.mailAddress = mailAddress;
         this.name = name;
     }
@@ -49,10 +49,10 @@ public class AddressItem implements Serializable {
         }
     }
 
-    public static AddressItem convertJsonToObject(String address) {
+    public static Contact convertJsonToObject(String address) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(address, AddressItem.class);
+            return mapper.readValue(address, Contact.class);
         } catch (IOException e) {
             throw new RuntimeException("JSON parse error.", e);
         }

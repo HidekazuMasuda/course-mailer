@@ -1,7 +1,7 @@
 package com.odde.mailsender.service;
 
-import com.odde.mailsender.data.AddressBook;
-import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.data.ContactList;
+import com.odde.mailsender.data.Contact;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,33 +17,33 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AddressBookServiceImplTest {
+public class ContactListServiceImplTest {
 
     @Autowired
-    private AddressBookService addressBookService;
+    private ContactListService contactListService;
 
     @Before
     public void initFile(){
-        File file = new File(AddressBook.FILE_PATH);
+        File file = new File(ContactList.FILE_PATH);
         boolean isDelete = file.delete();
         System.out.println("file delete result is " + isDelete);
     }
 
     @Test
     public void addMailAddress() throws Exception {
-        addressBookService.add(new AddressItem("xxx@gmail.com"));
+        contactListService.add(new Contact("xxx@gmail.com"));
     }
 
     @Test
     public void getMailAddress() throws Exception {
         String mailAddress = "yyy@gmail.com";
-        addressBookService.add(new AddressItem(mailAddress));
-        List<AddressItem> addressItems = addressBookService.get();
-        assertThat(addressItems.size(), is(1));
+        contactListService.add(new Contact(mailAddress));
+        List<Contact> contacts = contactListService.get();
+        assertThat(contacts.size(), is(1));
 
         Boolean isContains = false;
 
-        for (AddressItem item : addressItems) {
+        for (Contact item : contacts) {
             if (item.getMailAddress().equals(mailAddress)) {
                 isContains = true;
             }
@@ -53,7 +53,7 @@ public class AddressBookServiceImplTest {
 
     @Test
     public void getWhenNoItem() {
-        List<AddressItem> addressItems = addressBookService.get();
-        assertThat(addressItems.size(), is(0));
+        List<Contact> contacts = contactListService.get();
+        assertThat(contacts.size(), is(0));
     }
 }

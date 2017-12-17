@@ -1,7 +1,7 @@
 import com.odde.mailsender.MailsenderApplication;
-import com.odde.mailsender.data.AddressBook;
-import com.odde.mailsender.data.AddressItem;
-import com.odde.mailsender.service.AddressBookService;
+import com.odde.mailsender.data.ContactList;
+import com.odde.mailsender.data.Contact;
+import com.odde.mailsender.service.ContactListService;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -41,7 +41,7 @@ public class ContactListSteps {
     }
 
     @Autowired
-    AddressBookService addressBookService;
+    ContactListService contactListService;
 
     @Before
     public void setup() throws Exception {
@@ -59,17 +59,17 @@ public class ContactListSteps {
     }
 
     private void setupAddressItem() throws Exception {
-        File file = new File(AddressBook.FILE_PATH);
+        File file = new File(ContactList.FILE_PATH);
         boolean isDelete = file.delete();
 
-        addressBookService.add(new AddressItem("user1@gmail.com", "user1"));
-        addressBookService.add(new AddressItem("user2@gmail.com", "user2"));
-        addressBookService.add(new AddressItem("noname@gmail.com", ""));
+        contactListService.add(new Contact("user1@gmail.com", "user1"));
+        contactListService.add(new Contact("user2@gmail.com", "user2"));
+        contactListService.add(new Contact("noname@gmail.com", ""));
     }
 
     @After
     public void tearDown() {
-        File file = new File(AddressBook.FILE_PATH);
+        File file = new File(ContactList.FILE_PATH);
         boolean isDelete = file.delete();
         System.out.println("file delete result is " + isDelete);
     }
@@ -86,15 +86,15 @@ public class ContactListSteps {
 
     @Given("^ContactList is empty")
     public void clear_contact_list() throws Throwable {
-        AddressBook addressBook = new AddressBook();
-        addressBook.save();
+        ContactList contactList = new ContactList();
+        contactList.save();
     }
 
     @Given("^ContactList has \"([^\"]*)\"$")
     public void add_contact(String address) throws Throwable {
-        AddressBook addressBook = new AddressBook();
-        addressBook.add(new AddressItem(address));
-        addressBook.save();
+        ContactList contactList = new ContactList();
+        contactList.add(new Contact(address));
+        contactList.save();
     }
 
     @When("^add$")

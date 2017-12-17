@@ -1,8 +1,8 @@
 package com.odde.mailsender.controller;
 
-import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.data.Contact;
 import com.odde.mailsender.form.MailSendForm;
-import com.odde.mailsender.service.AddressBookService;
+import com.odde.mailsender.service.ContactListService;
 import com.odde.mailsender.service.MailInfo;
 import com.odde.mailsender.service.MailService;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +30,7 @@ public class MailController {
     @Autowired
     private MailService mailService;
     @Autowired
-    private AddressBookService addressBookService;
+    private ContactListService contactListService;
 
     @GetMapping("/send")
     public String send(@ModelAttribute("form") MailSendForm form, BindingResult result, Model model) {
@@ -52,10 +52,10 @@ public class MailController {
 
             List<MailInfo> mails = new ArrayList<>();
             for (String address : form.getAddresses()) {
-                if (contactNameExists(addressBookService.findByAddress(address)))
+                if (contactNameExists(contactListService.findBy(address)))
                     throw new Exception("When you use template, choose email from contract list that has a name");
 
-                mails.add(form.createRenderedMail(addressBookService.findByAddress(address)));
+                mails.add(form.createRenderedMail(contactListService.findBy(address)));
             }
             mailService.sendMultiple(mails);
             return REDIRECT_SEND_VIEW;
@@ -65,8 +65,8 @@ public class MailController {
         }
     }
 
-    private boolean contactNameExists(AddressItem addressItem) {
-        return addressItem == null || StringUtils.isEmpty(addressItem.getName());
+    private boolean contactNameExists(Contact contact) {
+        return contact == null || StringUtils.isEmpty(contact.getName());
     }
 
 }

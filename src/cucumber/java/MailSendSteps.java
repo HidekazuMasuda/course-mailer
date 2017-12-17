@@ -1,7 +1,7 @@
 import com.odde.mailsender.MailsenderApplication;
-import com.odde.mailsender.data.AddressBook;
-import com.odde.mailsender.data.AddressItem;
-import com.odde.mailsender.service.AddressBookService;
+import com.odde.mailsender.data.ContactList;
+import com.odde.mailsender.data.Contact;
+import com.odde.mailsender.service.ContactListService;
 import com.odde.mailsender.service.MailInfo;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -41,7 +41,7 @@ public class MailSendSteps {
     private Wiser wiser;
 
     @Autowired
-    private AddressBookService addressBookService;
+    private ContactListService contactListService;
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -75,11 +75,11 @@ public class MailSendSteps {
     }
 
     private void setupAdressItem() throws Exception {
-        new File(AddressBook.FILE_PATH).delete();
+        new File(ContactList.FILE_PATH).delete();
 
-        addressBookService.add(new AddressItem("user1@gmail.com", "user1"));
-        addressBookService.add(new AddressItem("user2@gmail.com", "user2"));
-        addressBookService.add(new AddressItem("noname@gmail.com", ""));
+        contactListService.add(new Contact("user1@gmail.com", "user1"));
+        contactListService.add(new Contact("user2@gmail.com", "user2"));
+        contactListService.add(new Contact("noname@gmail.com", ""));
     }
 
     @After

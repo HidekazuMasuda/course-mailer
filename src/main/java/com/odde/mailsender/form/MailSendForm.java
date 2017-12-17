@@ -1,17 +1,15 @@
 package com.odde.mailsender.form;
 
-import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.data.Contact;
 import com.odde.mailsender.service.MailInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class MailSendForm {
-
+    public static final String COURSE_MAILER_GMAIL_COM = "course.mailer@gmail.com";
+    public static final String TEMPLATE_STRING_NAME = "$name";
 
     @NotEmpty
     @Pattern(regexp = "^([_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -51,12 +49,12 @@ public class MailSendForm {
         return getAddress().split("\\s*;\\s*");
     }
 
-    public String renderSubjectTemplate(AddressItem addressItem) {
-        return StringUtils.replace(getSubject(), "$name", addressItem.getName());
+    private String renderSubjectTemplate(Contact contact) {
+        return StringUtils.replace(getSubject(), TEMPLATE_STRING_NAME, contact.getName());
     }
 
-    public String renderBodyTemplate(AddressItem addressItem) {
-        return StringUtils.replace(getBody(), "$name", addressItem.getName());
+    private String renderBodyTemplate(Contact contact) {
+        return StringUtils.replace(getBody(), TEMPLATE_STRING_NAME, contact.getName());
     }
 
     public static MailSendForm create(String[] addresses) {
@@ -71,14 +69,14 @@ public class MailSendForm {
     }
 
     public boolean isTemplate() {
-        return StringUtils.contains(getSubject(), "$name") || StringUtils.contains(getBody(), "$name");
+        return StringUtils.contains(getSubject(), TEMPLATE_STRING_NAME) || StringUtils.contains(getBody(), TEMPLATE_STRING_NAME);
     }
 
-    public MailInfo createRenderedMail(AddressItem addressItem) {
-        return new MailInfo("course.mailer@gmail.com", addressItem.getMailAddress(), renderSubjectTemplate(addressItem), renderBodyTemplate(addressItem));
+    public MailInfo createRenderedMail(Contact contact) {
+        return new MailInfo(COURSE_MAILER_GMAIL_COM, contact.getMailAddress(), renderSubjectTemplate(contact), renderBodyTemplate(contact));
     }
 
     public MailInfo createNormalMail(String address) {
-        return new MailInfo("course.mailer@gmail.com", address, getSubject(), getBody());
+        return new MailInfo(COURSE_MAILER_GMAIL_COM, address, getSubject(), getBody());
     }
 }

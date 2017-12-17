@@ -6,30 +6,30 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressBook {
+public class ContactList {
 
-    private List<AddressItem> addressItems = new ArrayList<>();
+    private List<Contact> contacts = new ArrayList<>();
     public static final String FILE_PATH = System.getenv("HOME") + "/course-mailer/addressbook.json";
 
     public void load() {
-        clearAddressBookItems();
+        clearContactList();
 
-        readAddressBookFile().forEach(address -> {
+        readContactListFile().forEach(address -> {
             try {
-                add(AddressItem.convertJsonToObject(address));
+                add(Contact.convertJsonToObject(address));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public void add(AddressItem addressItem) throws Exception {
-        for (AddressItem item : this.addressItems) {
-            if (item.getMailAddress().equals(addressItem.getMailAddress())) {
+    public void add(Contact contact) throws Exception {
+        for (Contact item : this.contacts) {
+            if (item.getMailAddress().equals(contact.getMailAddress())) {
                 throw new Exception("Duplicate address");
             }
         }
-        this.addressItems.add(addressItem);
+        this.contacts.add(contact);
     }
 
     public boolean save() throws IOException {
@@ -43,39 +43,39 @@ public class AddressBook {
         }
 
         try (BufferedWriter writer = getWriter(file)) {
-            for (AddressItem addressItem : addressItems) {
-                writer.write(addressItem.addressItemToString());
+            for (Contact contact : contacts) {
+                writer.write(contact.addressItemToString());
                 writer.newLine();
             }
 
-            addressItems.clear();
+            contacts.clear();
         }
 
         return true;
     }
 
-    public AddressItem findByAddress(String address) {
+    public Contact findByAddress(String address) {
         load();
-        for (AddressItem addressItem : addressItems) {
-            if (addressItem.getMailAddress().equals(address)) {
-                return addressItem;
+        for (Contact contact : contacts) {
+            if (contact.getMailAddress().equals(address)) {
+                return contact;
             }
         }
         return null;
     }
 
-    public List<AddressItem> getAddressItems() {
+    public List<Contact> getContacts() {
         load();
-        return addressItems;
+        return contacts;
     }
 
-    private void clearAddressBookItems() {
-        if (!addressItems.isEmpty()) {
-            addressItems.clear();
+    private void clearContactList() {
+        if (!contacts.isEmpty()) {
+            contacts.clear();
         }
     }
 
-    private List<String> readAddressBookFile() {
+    private List<String> readContactListFile() {
         List<String> addressList = new ArrayList<>();
         try {
             addressList = FileUtils.readLines(new File(FILE_PATH), "utf-8");

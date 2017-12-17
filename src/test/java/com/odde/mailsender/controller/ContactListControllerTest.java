@@ -1,8 +1,8 @@
 package com.odde.mailsender.controller;
 
 import com.odde.mailsender.form.MailSendForm;
-import com.odde.mailsender.service.AddressBookService;
-import com.odde.mailsender.data.AddressItem;
+import com.odde.mailsender.service.ContactListService;
+import com.odde.mailsender.data.Contact;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import java.util.ArrayList;
@@ -33,17 +32,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ContactListControllerTest {
 
     @MockBean
-    private AddressBookService addressBookService;
+    private ContactListService contactListService;
 
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void getSize1ContactList() throws Exception {
-        List<AddressItem> result = new ArrayList<>();
-        result.add(new AddressItem("aaa@example.com"));
+        List<Contact> result = new ArrayList<>();
+        result.add(new Contact("aaa@example.com"));
 
-        when(addressBookService.get()).thenReturn(result);
+        when(contactListService.get()).thenReturn(result);
         mvc.perform(get("/contact-list"))
                 .andExpect(model().attribute("contactList", hasSize(1)));
     }
@@ -52,8 +51,8 @@ public class ContactListControllerTest {
     public void addEmailAddress() throws Exception {
         performContactListSuccess("aaa@yahoo.co.jp", "aaa");
 
-        verify(addressBookService).add(argThat(mail -> mail.getMailAddress().equals("aaa@yahoo.co.jp")));
-        verify(addressBookService).add(argThat(mail -> mail.getName().equals("aaa")));
+        verify(contactListService).add(argThat(mail -> mail.getMailAddress().equals("aaa@yahoo.co.jp")));
+        verify(contactListService).add(argThat(mail -> mail.getName().equals("aaa")));
     }
 
     @Test

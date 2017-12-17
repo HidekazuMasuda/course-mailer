@@ -1,14 +1,11 @@
 package com.odde.mailsender.controller;
 
-import com.odde.mailsender.data.AddressBook;
-import com.odde.mailsender.service.AddressBookService;
-import com.odde.mailsender.service.MailBuilder;
+import com.odde.mailsender.data.ContactList;
+import com.odde.mailsender.service.ContactListService;
 import com.odde.mailsender.service.MailInfo;
 import com.odde.mailsender.service.MailService;
-import com.odde.mailsender.data.AddressItem;
-import org.apache.commons.mail.EmailException;
+import com.odde.mailsender.data.Contact;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +22,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import static com.odde.mailsender.service.MailBuilder.*;
 import static org.junit.Assert.*;
@@ -38,7 +32,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(SpringRunner.class)
@@ -57,13 +50,13 @@ public class MailControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private AddressBookService addressBookService;
+    private ContactListService contactListService;
 
-    AddressItem noNameAddress = new AddressItem("course.mailer@gmail.com", "");
+    Contact noNameAddress = new Contact("course.mailer@gmail.com", "");
 
     @Before
     public void setUp() {
-        File file = new File(AddressBook.FILE_PATH);
+        File file = new File(ContactList.FILE_PATH);
         boolean isDelete = file.delete();
     }
 
@@ -101,8 +94,8 @@ public class MailControllerTest {
     @Test
     public void sendMultipleWhenUseTemplate() throws Exception {
 
-        addressBookService.add(new AddressItem("course.mailer@gmail.com", "Aki"));
-        addressBookService.add(new AddressItem("stanly@xxx.com", "Stanly"));
+        contactListService.add(new Contact("course.mailer@gmail.com", "Aki"));
+        contactListService.add(new Contact("stanly@xxx.com", "Stanly"));
 
         MailInfo mailInfo = validMail().withSubject("Hello $name").withBody("Hi $name").withTo("course.mailer@gmail.com;stanly@xxx.com").build();
 
@@ -137,7 +130,7 @@ public class MailControllerTest {
 
     @Test
     public void notSubjectReplaceWhenNoNameAddress() throws Exception {
-        addressBookService.add(noNameAddress);
+        contactListService.add(noNameAddress);
 
         MailInfo mailInfo = validMail().withSubject("Hi $name").withTo(noNameAddress.getMailAddress()).build();
 
@@ -151,7 +144,7 @@ public class MailControllerTest {
     @Test
     public void notBodyReplaceWhenNoNameAddress() throws Exception {
 
-        addressBookService.add(noNameAddress);
+        contactListService.add(noNameAddress);
 
         MailInfo mailInfo = validMail().withBody("Hi $name").withTo(noNameAddress.getMailAddress()).build();
 
