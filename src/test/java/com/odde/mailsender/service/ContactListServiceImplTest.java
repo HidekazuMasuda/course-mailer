@@ -1,7 +1,7 @@
 package com.odde.mailsender.service;
 
-import com.odde.mailsender.data.ContactList;
 import com.odde.mailsender.data.Contact;
+import com.odde.mailsender.data.ContactListImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ public class ContactListServiceImplTest {
 
     @Before
     public void initFile(){
-        File file = new File(ContactList.FILE_PATH);
+        File file = new File(ContactListImpl.FILE_PATH);
         boolean isDelete = file.delete();
         System.out.println("file delete result is " + isDelete);
     }

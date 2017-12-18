@@ -11,21 +11,21 @@ import static org.junit.Assert.assertThat;
 
 public class ContactBookTest {
 
-    ContactList contactList = new ContactList();
+    ContactListImpl contactList = new ContactListImpl();
     Contact contact = new Contact("stanly@odd-e.com", "stanly");
 
 
     @Test
     public void addAddressItem() throws Exception {
         this.contactList.add(contact);
-        assertThat(contactList.getContacts().get(0).getMailAddress(), is(contact.getMailAddress()));
+        assertThat(contactList.findAll().get(0).getMailAddress(), is(contact.getMailAddress()));
     }
 
     @Test
     public void existFile() throws Exception {
         this.contactList.add(contact);
         this.contactList.save();
-        assertThat(new File(ContactList.FILE_PATH).exists(), is(true));
+        assertThat(new File(ContactListImpl.FILE_PATH).exists(), is(true));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class ContactBookTest {
         this.contactList.add(contact);
         this.contactList.save();
 
-        List<String> addressList = FileUtils.readLines(new File(ContactList.FILE_PATH), "utf-8");
+        List<String> addressList = FileUtils.readLines(new File(ContactListImpl.FILE_PATH), "utf-8");
 
         assertThat(addressList.size(), is(1));
         assertThat(addressList.get(0), is(contact.addressItemToString()));
@@ -46,9 +46,9 @@ public class ContactBookTest {
 
         contactList.load();
 
-        assertThat(contactList.getContacts().size(), is(1));
-        assertThat(contactList.getContacts().get(0).getMailAddress(), is(contact.getMailAddress()));
-        assertThat(contactList.getContacts().get(0).getName(), is(contact.getName()));
+        assertThat(contactList.findAll().size(), is(1));
+        assertThat(contactList.findAll().get(0).getMailAddress(), is(contact.getMailAddress()));
+        assertThat(contactList.findAll().get(0).getName(), is(contact.getName()));
     }
 
     @Test(expected = Exception.class)
@@ -60,7 +60,7 @@ public class ContactBookTest {
 
     @Test
     public void findByAddress() throws Exception {
-        Contact actual = contactList.findByAddress("stanly@odd-e.com");
+        Contact actual = contactList.findBy("stanly@odd-e.com");
         assertThat(actual.getName(), is(contact.getName()));
         assertThat(actual.getMailAddress(), is(contact.getMailAddress()));
     }

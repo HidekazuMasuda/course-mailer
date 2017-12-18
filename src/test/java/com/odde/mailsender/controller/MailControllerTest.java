@@ -1,6 +1,6 @@
 package com.odde.mailsender.controller;
 
-import com.odde.mailsender.data.ContactList;
+import com.odde.mailsender.data.ContactListImpl;
 import com.odde.mailsender.service.ContactListService;
 import com.odde.mailsender.service.MailInfo;
 import com.odde.mailsender.service.MailService;
@@ -43,6 +43,7 @@ public class MailControllerTest {
     public static final String ADDRESS_FORMAT_IS_WRONG = "Address format is wrong";
     public static final String WHEN_YOU_USE_TEMPLATE_CHOOSE_EMAIL_FROM_CONTRACT_LIST_THAT_HAS_A_NAME = "When you use template, choose email from contract list that has a name";
     public static final String TRY_TO_SEND_EMAIL_BUT_FAILED = "Try to send email, but failed";
+
     @MockBean
     private MailService mailService;
 
@@ -56,7 +57,7 @@ public class MailControllerTest {
 
     @Before
     public void setUp() {
-        File file = new File(ContactList.FILE_PATH);
+        File file = new File(ContactListImpl.FILE_PATH);
         boolean isDelete = file.delete();
     }
 

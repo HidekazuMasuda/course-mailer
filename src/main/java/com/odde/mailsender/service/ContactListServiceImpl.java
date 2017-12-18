@@ -1,7 +1,7 @@
 package com.odde.mailsender.service;
 
-import com.odde.mailsender.data.ContactList;
 import com.odde.mailsender.data.Contact;
+import com.odde.mailsender.data.ContactListImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class ContactListServiceImpl implements ContactListService {
 
 
-    private ContactList contactList = new ContactList();
+    private ContactListImpl contactList = new ContactListImpl();
 
     @Override
     public void add(Contact contact) throws Exception {
@@ -21,10 +21,10 @@ public class ContactListServiceImpl implements ContactListService {
 
     @Override
     public List<Contact> get() {
-        return contactList.getContacts();
+        return contactList.findAll();
     }
 
     public Contact findBy(String address) {
-        return contactList.findByAddress(address);
+        return contactList.findBy(address);
     }
 }

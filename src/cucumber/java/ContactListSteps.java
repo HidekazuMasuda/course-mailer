@@ -1,6 +1,7 @@
 import com.odde.mailsender.MailsenderApplication;
 import com.odde.mailsender.data.ContactList;
 import com.odde.mailsender.data.Contact;
+import com.odde.mailsender.data.ContactListImpl;
 import com.odde.mailsender.service.ContactListService;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -59,7 +60,7 @@ public class ContactListSteps {
     }
 
     private void setupAddressItem() throws Exception {
-        File file = new File(ContactList.FILE_PATH);
+        File file = new File(ContactListImpl.FILE_PATH);
         boolean isDelete = file.delete();
 
         contactListService.add(new Contact("user1@gmail.com", "user1"));
@@ -69,7 +70,7 @@ public class ContactListSteps {
 
     @After
     public void tearDown() {
-        File file = new File(ContactList.FILE_PATH);
+        File file = new File(ContactListImpl.FILE_PATH);
         boolean isDelete = file.delete();
         System.out.println("file delete result is " + isDelete);
     }
@@ -86,13 +87,13 @@ public class ContactListSteps {
 
     @Given("^ContactList is empty")
     public void clear_contact_list() throws Throwable {
-        ContactList contactList = new ContactList();
+        ContactList contactList = new ContactListImpl();
         contactList.save();
     }
 
     @Given("^ContactList has \"([^\"]*)\"$")
     public void add_contact(String address) throws Throwable {
-        ContactList contactList = new ContactList();
+        ContactList contactList = new ContactListImpl();
         contactList.add(new Contact(address));
         contactList.save();
     }

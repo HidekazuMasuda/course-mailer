@@ -1,6 +1,6 @@
 import com.odde.mailsender.MailsenderApplication;
-import com.odde.mailsender.data.ContactList;
 import com.odde.mailsender.data.Contact;
+import com.odde.mailsender.data.ContactListImpl;
 import com.odde.mailsender.service.ContactListService;
 import com.odde.mailsender.service.MailInfo;
 import cucumber.api.java.After;
@@ -75,7 +75,7 @@ public class MailSendSteps {
     }
 
     private void setupAdressItem() throws Exception {
-        new File(ContactList.FILE_PATH).delete();
+        new File(ContactListImpl.FILE_PATH).delete();
 
         contactListService.add(new Contact("user1@gmail.com", "user1"));
         contactListService.add(new Contact("user2@gmail.com", "user2"));
