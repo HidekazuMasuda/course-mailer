@@ -1,5 +1,6 @@
 # course-mailer
 
+[![Build Status](https://travis-ci.org/HidekazuMasuda/course-mailer.svg?branch=master)](https://travis-ci.org/HidekazuMasuda/course-mailer)
 
 # production run 
 -Dspring.profiles.active=prod
