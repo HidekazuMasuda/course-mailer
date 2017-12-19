@@ -1,1 +1,8 @@
 language: java
+dist: trusty
+addons:
+  chrome: stable
+install:
+- wget https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip
+- unzip chromedriver_linux64.zip
+- npm install
